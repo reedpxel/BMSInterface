@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/new/images">
+        <file>no-connection.png</file>
+    </qresource>
+</RCC>
