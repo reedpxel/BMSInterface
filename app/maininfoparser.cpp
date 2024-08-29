@@ -78,7 +78,7 @@ void MainInfoParser::parseMainInfoMessage(const QByteArray& message)
         mainInfo.temperatures[i] = 2731 -
             twoBytesToInt(message.data() + 27 + 2 * i);
     }
-    emit dataReceived(mainInfo);
+    emit sgnDataReceived(mainInfo);
 }
 
 void MainInfoParser::parseLineVoltageMessage(const QByteArray& message)
@@ -93,5 +93,6 @@ void MainInfoParser::parseLineVoltageMessage(const QByteArray& message)
         if (mainInfo.linesVoltage[i] < _min) _min = mainInfo.linesVoltage[i];
     }
     mainInfo.diff = _max - _min;
-    emit dataReceived(mainInfo);
+    emit sgnDataReceived(mainInfo);
 }
+

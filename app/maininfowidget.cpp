@@ -57,7 +57,7 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
     ui->cyclesLabel->setText(QString::number(mainInfo.cycles));
 
     // battery slider
-    batterySlider->setPercent(mainInfo.capacityInPercents);
+    batterySlider->slotSetPercent(mainInfo.capacityInPercents);
 
     // temperatures
     if (ui->tempsTable->rowCount() != mainInfo.temperatures.size())

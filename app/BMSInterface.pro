@@ -9,26 +9,29 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    addinforeader.cpp \
+    addinfoparser.cpp \
     addinfowidget.cpp \
     batteryslider.cpp \
     comportreader.cpp \
+    logswidget.cpp \
     main.cpp \
     maininfoparser.cpp \
     maininfowidget.cpp \
     mainwindow.cpp
 
 HEADERS += \
-    addinforeader.h \
+    addinfoparser.h \
     addinfowidget.h \
     batteryslider.h \
     comportreader.h \
+    logswidget.h \
     maininfoparser.h \
     maininfowidget.h \
     mainwindow.h
 
 FORMS += \
     addinfowidget.ui \
+    logswidget.ui \
     maininfowidget.ui \
     mainwindow.ui
 

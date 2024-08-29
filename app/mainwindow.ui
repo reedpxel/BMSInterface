@@ -7,11 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>1150</width>
-    <height>637</height>
+    <height>650</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1150</width>
+    <height>650</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BMSInterface</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
@@ -47,18 +53,13 @@
              <x>0</x>
              <y>0</y>
              <width>1108</width>
-             <height>544</height>
+             <height>557</height>
             </rect>
            </property>
           </widget>
          </widget>
         </item>
        </layout>
-      </widget>
-      <widget class="QWidget" name="calibrationTab">
-       <attribute name="title">
-        <string>Calibration</string>
-       </attribute>
       </widget>
       <widget class="QWidget" name="logsTab">
        <attribute name="title">
@@ -69,7 +70,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <resources/>
  <connections/>

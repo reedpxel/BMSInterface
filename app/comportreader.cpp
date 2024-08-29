@@ -8,18 +8,30 @@ void COMPortReader::openPort(const QString& portName_)
     port->setParity(QSerialPort::NoParity);
     port->setStopBits(QSerialPort::OneStop);
     if (port->open(QIODevice::ReadWrite)) {
-        emit portOpened(port->portName());
+        emit sgnPortOpened(port->portName());
         isConnected = true;
         killTimer(timerId);
+        connect(writeTimer, SIGNAL(timeout()), SLOT(slotWriteAutomatic()));
+        writeTimer->start(MAIN_INFO_TIMER_STEP);
     } else {
-        emit portDidNotOpen(port->portName());
+        emit sgnPortDidNotOpen(port->portName());
     }
 }
 
-COMPortReader::COMPortReader() : QObject(nullptr), port(new QSerialPort),
-    timerId(startTimer(1000)), isConnected(false), attempt(1)
+COMPortReader::COMPortReader() : QObject(nullptr),
+    port(new QSerialPort),
+    modeIsAutomatic(true),
+    writeTimer(new QTimer),
+    timerId(startTimer(1000)),
+    isConnected(false),
+    attempt(1),
+    writeMsgFlag(false)
 {
-    connect(port, SIGNAL(readyRead()), SLOT(slotReadyRead()));
+    uint8_t arr03[7] = {0xdd, 0xa5, 0x03, 0x00, 0xff, 0xfd, 0x77};
+    uint8_t arr04[7] = {0xdd, 0xa5, 0x04, 0x00, 0xff, 0xfc, 0x77};
+    msgToSend03 = QByteArray(reinterpret_cast<char*>(arr03), 7);
+    msgToSend04 = QByteArray(reinterpret_cast<char*>(arr04), 7);
+    connect(port, SIGNAL(readyRead()), SLOT(slotReadyReadAutomatic()));
 }
 
 COMPortReader::~COMPortReader()
@@ -27,7 +39,7 @@ COMPortReader::~COMPortReader()
     if (!isConnected)
     {
         port->close();
-        emit portClosed();
+        emit sgnPortClosed();
     }
 }
 
@@ -41,7 +53,8 @@ bool COMPortReader::slotSearchForPorts()
     auto ports = QSerialPortInfo::availablePorts();
     for (auto port_ : ports)
     {
-        if (port_.description() == "USB Serial")
+        QString port_description = port_.description();
+        if (port_description == "USB Serial")
         {
             attempt = 1;
             try
@@ -49,19 +62,71 @@ bool COMPortReader::slotSearchForPorts()
                 openPort(port_.portName());
                 return true;
             } catch (...) {
-                qDebug() << "port " << port_.portName() << " didn't open";
                 return false;
             }
         }
     }
-    emit noPortsFound(attempt);
+    emit sgnNoPortsFound(attempt);
     ++attempt;
     return false;
 }
 
-void COMPortReader::slotReadyRead()
+void COMPortReader::slotReadyReadAutomatic()
 {
-    QTest::qWait(70);
+    QTest::qWait(MAIN_INFO_AUTOMATIC_DELAY);
     QByteArray ba = port->readAll();
-    emit dataGot(ba);
+    emit sgnDataGotAutomatic(ba);
+}
+
+void COMPortReader::slotReadyReadManual()
+{
+    QTest::qWait(100);
+    QByteArray ba = port->readAll();
+    emit sgnDataGotManual(ba);
+}
+
+void COMPortReader::slotNoAnswer()
+{
+    if (port->isOpen())
+    {
+        port->close();
+        emit sgnPortClosed();
+        startTimer(NO_PORTS_TIMER_DELAY);
+    }
+}
+
+void COMPortReader::slotWriteAutomatic()
+{
+    QByteArray& msg = writeMsgFlag ? msgToSend03 : msgToSend04;
+    writeMsgFlag = writeMsgFlag ? false : true;
+    port->write(msg);
+}
+
+void COMPortReader::slotSetAutomaticMode()
+{
+    writeTimer->start(MAIN_INFO_TIMER_STEP);
+    modeIsAutomatic = true;
+    QObject::disconnect(port, SIGNAL(readyRead()), this,
+        SLOT(slotReadyReadManual()));
+    QObject::connect(port, SIGNAL(readyRead()), this,
+        SLOT(slotReadyReadAutomatic()));
+}
+
+void COMPortReader::slotSetManualMode()
+{
+    writeTimer->stop();
+    modeIsAutomatic = false;
+    QObject::connect(port, SIGNAL(readyRead()), this,
+        SLOT(slotReadyReadManual()));
+    QObject::disconnect(port, SIGNAL(readyRead()), this,
+        SLOT(slotReadyReadAutomatic()));
+    QTest::qWait(100);
+    // data from the main messages may remain in buffer
+    port->readAll(); // flushes the input buffer;
+    emit sgnManualModeIsSet();
+}
+
+void COMPortReader::slotWriteManually(const QByteArray& message)
+{
+    port->write(message);
 }

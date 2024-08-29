@@ -1,143 +1,46 @@
-#ifndef ADDINFO_H
-#define ADDINFO_H
+#ifndef ADDINFOPARSER_H
+#define ADDINFOPARSER_H
+#include <iostream>
 #include <vector>
 #include <stdint.h>
+#include <QObject>
+#include <QDebug>
+#include <QByteArray>
+#include "comportreader.h"
+#include "maininfowidget.h"
 
-struct GeneralInfo
+class AddInfoParser : public QObject
 {
-    int maximumCapacity;
-    int maximumCyclicCapacity;
-    int chargedLineVoltage;
-    int charged80PercentVoltage;
-    int charged60PercentVoltage;
-    int charged40PercentVoltage;
-    int charged20PercentVoltage;
-    int dischargedLineVoltage;
-    int selfDischargeRate;
-    int cellBalanceVoltage;
-    int balanceWindow;
-    int shunt;
-    std::vector<bool> thermoresistorsState;
+Q_OBJECT
+    COMPortReader* reader;
+
+    std::vector<QByteArray> querySequence;
+    std::vector<uint8_t> registersToRead;
+    std::vector<QByteArray> registersContent;
+    unsigned currentQuery;
+    unsigned attempt;
+
+    void setCrc(uint8_t* begin, uint8_t* end, uint8_t* crc);
+    uint16_t getCrc(const QByteArray& array); // returns the CRC that must be
+    // according to BMS protocol, not the CRC that actually is in the array
+    QByteArray getMessageReadRegister(uint8_t register_);
+    QByteArray getMessageWriteRegister(uint8_t register_,
+        std::vector<uint8_t> data);
+    bool messageIsViable(const QByteArray& array);
+    QByteArray getMessageUsefulData(const QByteArray& array);
+    inline uint8_t getRegister(const QByteArray& array);
+    inline uint16_t twoBytesToUInt(uint8_t high, uint8_t low);
+signals:
+    void sgnSetAutomaticMode();
+    void sgnSetManualMode();
+    void sgninfoUpdated();
+    void sgnSend(const QByteArray&);
+    void sgnSendDataToGUI(const std::vector<QByteArray>&);
+public:
+    AddInfoParser(COMPortReader* reader);
+public slots:
+    void slotParseMessage(const QByteArray&);
+    void slotSendNextMessageOrExit();
 };
 
-struct DeviceInfo
-{
-    int manufactureDate;
-    std::vector<uint8_t> serialNumber;
-    int cycles;
-    int softwareVersion;
-    std::vector<uint8_t> manufacturer;
-    std::vector<uint8_t> deviceName;
-    std::vector<uint8_t> barcode;
-};
-
-struct ErrorCount
-{
-    unsigned shortCurcuits;
-    unsigned chargeOvercurrents;
-    unsigned dischargeOvercurrents;
-    unsigned lineOvervoltages;
-    unsigned lineUndervoltages;
-    unsigned chargeOverheatings;
-    unsigned chargeUnderheatings;
-    unsigned dischargeOverheatings;
-    unsigned dischargeUnderheatings;
-    unsigned blockOvervoltages;
-    unsigned blockUndervoltages;
-};
-
-struct OverheatingProtection
-{
-    int overheatingChargeShutdownTemp;
-    int overheatingChargeReturnTemp;
-    int overheatingChargeReturnTime;
-
-    int overheatingDischargeShutdownTemp;
-    int overheatingDischargeReturnTemp;
-    int overheatingDischargeReturnTime;
-};
-
-struct UnderheatingProtection
-{
-    int underheatingChargeShutdownTemp;
-    int underheatingChargeReturnTemp;
-    int underheatingChargeReturnTime;
-
-    int underheatingDischargeShutdownTemp;
-    int underheatingDischargeReturnTemp;
-    int underheatingDischargeReturnTime;
-};
-
-struct VoltageShutdown
-{
-    int aboveShutdownVoltage;
-    int aboveReturnVoltage;
-    int aboveReturnTime;
-
-    int beyondShutdownVoltage;
-    int beyondReturnVoltage;
-    int beyondReturnTime;
-};
-
-struct LineVoltageShutdown
-{
-    int aboveShutdownLineVoltage;
-    int aboveReturnLineVoltage;
-    int aboveReturnTime_line;
-
-    int beyondShutdownLineVoltage;
-    int beyondReturnLineVoltage;
-    int beyondReturnTime_line;
-};
-
-struct ShortCurcuit
-{
-    int chargeShutdownCurrent;
-    int chargeBreakDelay;
-    int chargeReturnTime;
-
-    int dischargeShutdownCurrent;
-    int dischargeBreakDelay;
-    int dischargeReturnTime;
-
-    int scReleaseTime;
-    int scDelay;
-    int scValue;
-
-    int dischargeOvercurrentValue;
-    int dischargeOvercurrentDelay;
-};
-
-struct CellProtection
-{
-    int overvoltageProtectionValue;
-    int undervoltageProtectionValue;
-    int overvoltageProtectionDelay;
-    int undervoltageProtectionDelay;
-};
-
-struct Other
-{
-    bool enableLineBalancing;
-    bool enableLineChargeBalancing;
-    unsigned short LinesStatus;
-};
-
-struct AddInfoReader
-{
-    int error;
-    GeneralInfo generalInfo;
-    DeviceInfo deviceInfo;
-    ErrorCount errorCount;
-    OverheatingProtection overheatingProtection;
-    UnderheatingProtection underheatingProtection;
-    VoltageShutdown voltageShutdown;
-    LineVoltageShutdown lineVoltageShutdown;
-    ShortCurcuit shortCurcuit;
-    CellProtection cellProtection;
-    Other other;
-
-    AddInfoReader();
-};
-
-#endif // ADDINFO_H
+#endif // ADDINFOPARSER_H

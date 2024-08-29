@@ -1,36 +1,79 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
-    ui(new Ui::MainWindow), reader(), parser()
+void MainWindow::drawNoConnectionWindow()
 {
+    delete ui;
+    ui = nullptr; // if "delete ui" in ~MainWindow() called, delete nullptr
+//is ok, delete some value that is already deleted is UB
+    noConnectionWidget = new QWidget;
+    QLabel* pixelLabel = new QLabel;
+    pixelLabel->setPixmap(*noConnectionPixmap);
+    QVBoxLayout* layout = new QVBoxLayout;
+    layout->addStretch();
+    layout->addWidget(pixelLabel, 0, Qt::AlignHCenter | Qt::AlignBottom);
+    layout->addSpacerItem(new QSpacerItem(0, 25));
+    layout->addWidget(new QLabel(
+        "No fitting COM ports found. Make sure the USB-UART converter is "
+        "connected and is not used by other processes."), 0, Qt::AlignHCenter |
+        Qt::AlignTop);
+    layout->addStretch();
+    noConnectionWidget->setLayout(layout);
+    setCentralWidget(noConnectionWidget);
+}
+
+void MainWindow::drawConnectedWindow()
+{
+    delete noConnectionWidget;
+    noConnectionWidget = nullptr;
+    ui = new Ui::MainWindow;
     ui->setupUi(this);
-    MainInfoWidget* mi = new MainInfoWidget;
-    connect(&parser, SIGNAL(dataReceived(const MainInfo&)),
-        mi, SLOT(slotDataReceived(const MainInfo&)));
+    MainInfoWidget* mainInfoWidget = new MainInfoWidget;
+    connect(&parser, SIGNAL(sgnDataReceived(const MainInfo&)),
+        mainInfoWidget, SLOT(slotDataReceived(const MainInfo&)));
     QGridLayout* mainInfoLayout = new QGridLayout;
-    mainInfoLayout->addWidget(mi);
+    mainInfoLayout->addWidget(mainInfoWidget);
     ui->mainInfoTab->setLayout(mainInfoLayout);
-    AddInfoWidget* ai = new AddInfoWidget;
-    ui->scrollArea->setWidget(ai);
+    addInfoWidget = new AddInfoWidget(this);
+    ui->scrollArea->setWidget(addInfoWidget);
+    logsWidget = new LogsWidget(this);
+    QGridLayout* logsLayout = new QGridLayout;
+    logsLayout->addWidget(logsWidget);
+    ui->logsTab->setLayout(logsLayout);
+}
 
-    connect(&reader, SIGNAL(noPortsFound(size_t)),
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
+    ui(nullptr), reader(), parser(),
+    noConnectionPixmap(nullptr),
+    noConnectionWidget(nullptr),
+    addInfoWidget(nullptr)
+{
+    noConnectionPixmap = new QPixmap(
+        QPixmap(":/new/images/no-connection.png").scaled(QSize(300, 300),
+        Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    setMinimumSize(1150, 650);
+    setWindowTitle("BMSInterface");
+    drawNoConnectionWindow();
+    statusBar()->showMessage("");
+    connect(&reader, SIGNAL(sgnNoPortsFound(size_t)),
         SLOT(slotNoPortsFound(size_t)));
-    connect(&reader, SIGNAL(portOpened(const QString&)),
+    connect(&reader, SIGNAL(sgnPortOpened(const QString&)),
         SLOT(slotPortOpened(const QString&)));
-    connect(&reader, SIGNAL(portDidNotOpen(const QString&)),
+    connect(&reader, SIGNAL(sgnPortDidNotOpen(const QString&)),
         SLOT(slotPortDidNotOpen(const QString&)));
-    connect(&reader, SIGNAL(portClosed()),
+    connect(&reader, SIGNAL(sgnPortClosed()),
         SLOT(slotPortClosed()));
-    connect(&reader, SIGNAL(dataGot(const QByteArray&)),
+    connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
         SLOT(slotDataGot(const QByteArray&)));
-
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete noConnectionWidget;
 }
+
+COMPortReader* MainWindow::getReader() { return &reader; }
 
 void MainWindow::slotNoPortsFound(size_t attempt)
 {
@@ -40,6 +83,7 @@ void MainWindow::slotNoPortsFound(size_t attempt)
 
 void MainWindow::slotPortOpened(const QString& str)
 {
+    drawConnectedWindow();
     statusBar()->showMessage("COM port " + str + " opened", 2000);
 }
 
@@ -50,6 +94,7 @@ void MainWindow::slotPortDidNotOpen(const QString& str)
 
 void MainWindow::slotPortClosed()
 {
+    drawNoConnectionWindow();
     statusBar()->showMessage("No reply from device, COM port closed", 2000);
 }
 

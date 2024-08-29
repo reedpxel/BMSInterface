@@ -12,7 +12,7 @@ public:
     BatterySlider(QWidget* parent = nullptr);
     int percent();
 public slots:
-    void setPercent(int percent);
+    void slotSetPercent(int percent);
 };
 
 #endif // BATTERYSLIDER_H

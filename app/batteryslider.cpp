@@ -27,7 +27,7 @@ BatterySlider::BatterySlider(QWidget* parent) : QWidget(parent), value(0)
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
-void BatterySlider::setPercent(int percent)
+void BatterySlider::slotSetPercent(int percent)
 {
     value = percent;
     repaint();

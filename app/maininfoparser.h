@@ -1,11 +1,9 @@
 #ifndef MAININFOPARSER_H
 #define MAININFOPARSER_H
-#include "qobjectdefs.h"
 #include <QObject>
 #include <vector>
 #include <QByteArray>
 #include <climits>
-#include <QDebug>
 
 struct MainInfo
 {
@@ -40,7 +38,8 @@ public:
     void parseMainInfoMessage(const QByteArray& message);
     void parseLineVoltageMessage(const QByteArray& message);
 signals:
-    void dataReceived(const MainInfo&);
+    void sgnDataReceived(const MainInfo&);
+    void sgnSetManualMode();
 };
 
 #endif // MAININFOPARSER_H
