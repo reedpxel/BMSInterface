@@ -46,273 +46,456 @@ QString AddInfoWidget::QByteArrayToDate(const QByteArray &array)
 }
 
 AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
-    ui(new Ui::AddInfoWidget),
-    parser_(qobject_cast<MainWindow*>(parent)->getReader())
+    parser_(qobject_cast<MainWindow*>(parent)->getReader()),
+    expectedRegisterSizes({29, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        2, 2, 2, 2, 2, 0, 0, 0, 22}),
+    dataSetters({
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x03->setText(getSoftwareVersion(data_[0][18]));
+        }, // 0x03
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x05->setText(JBDStringToQString(data_[1]));
+        }, // 0x05
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x10->setText(QString::number(getUInt16InArray(
+                data_[2], 0) / 100., 'f', 2));
+        }, // 0x10
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x11->setText(QString::number(getUInt16InArray(
+                data_[3], 0) / 100., 'f', 2));
+        }, // 0x11
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x12->setText(QString::number(getUInt16InArray(
+                data_[4], 0) / 100., 'f', 2));
+        }, // 0x12
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x13->setText(QString::number(getUInt16InArray(
+                data_[5], 0) / 100., 'f', 2));
+        }, // 0x13
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x14->setText(QString::number(getUInt16InArray(
+                data_[6], 0) / 100., 'f', 2));
+        }, // 0x14
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x15->setText(QByteArrayToDate(data_[7]));
+        }, // 0x15
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x16->setText(QString::number(getUInt16InArray(
+                data_[8], 0)));
+        }, // 0x16
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x17->setText(QString::number(getUInt16InArray(
+                data_[9], 0)));
+        }, // 0x17
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x18->setText(getTemperature(data_[10]));
+        }, // 0x18
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x19->setText(getTemperature(data_[11]));
+        }, // 0x19
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1a->setText(getTemperature(data_[12]));
+        }, // 0x1a
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1b->setText(getTemperature(data_[13]));
+        }, // 0x1b
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1c->setText(getTemperature(data_[14]));
+        }, // 0x1c
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1d->setText(getTemperature(data_[15]));
+        }, // 0x1d
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1e->setText(getTemperature(data_[16]));
+        }, // 0x1e
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x1f->setText(getTemperature(data_[17]));
+        }, // 0x1f
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x20->setText(QString::number(getUInt16InArray(
+                data_[18], 0) / 100., 'f', 2));
+        }, // 0x20
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x21->setText(QString::number(getUInt16InArray(
+                data_[19], 0) / 100., 'f', 2));
+        }, // 0x21
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x22->setText(QString::number(getUInt16InArray(
+                data_[20], 0) / 100., 'f', 2));
+        }, // 0x22
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x23->setText(QString::number(getUInt16InArray(
+                data_[21], 0) / 100., 'f', 2));
+        }, // 0x23
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x24->setText(QString::number(getUInt16InArray(
+                data_[22], 0) / 100., 'f', 2));
+        }, // 0x24
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x25->setText(QString::number(getUInt16InArray(
+                data_[23], 0) / 100., 'f', 2));
+        }, // 0x25
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x26->setText(QString::number(getUInt16InArray(
+                data_[24], 0) / 100., 'f', 2));
+        }, // 0x26
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x27->setText(QString::number(getUInt16InArray(
+                data_[25], 0) / 100., 'f', 2));
+        }, // 0x27
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x28->setText(QString::number(getUInt16InArray(
+                data_[26], 0) / 100., 'f', 2));
+        }, // 0x28
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x29->setText(QString::number(getUInt16InArray(
+                data_[27], 0) / 100., 'f', 2));
+        }, // 0x29
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x2a->setText(QString::number(getUInt16InArray(
+                data_[28], 0) / 100., 'f', 3));
+        }, // 0x2a
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x2b->setText(QString::number(getUInt16InArray(
+                data_[29], 0) / 1000.));
+        }, // 0x2b
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x2c->setText(QString::number(getUInt16InArray(
+                data_[30], 0)));
+        }, // 0x2c
+        [this](const std::vector<QByteArray>& data_)
+        {
+        // thermoresistors state - TO DO
+        }, // 0x2e
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x32->setText(QString::number(getUInt16InArray(
+                data_[32], 0) / 100., 'f', 2));
+        }, // 0x32
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x33->setText(QString::number(getUInt16InArray(
+                data_[33], 0) / 100., 'f', 2));
+        }, // 0x33
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x34->setText(QString::number(getUInt16InArray(
+                data_[34], 0) / 100., 'f', 2));
+        }, // 0x34
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x35->setText(QString::number(getUInt16InArray(
+                data_[35], 0) / 100., 'f', 2));
+        }, // 0x35
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x36->setText(QString::number(getUInt16InArray(
+                data_[36], 0) / 100., 'f', 2));
+        }, // 0x36
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x37->setText(QString::number(getUInt16InArray(
+                data_[37], 0) / 100., 'f', 2));
+        }, // 0x37
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->radioButton_0x38_07->setChecked((data_[38][0] & 0b10000000) >>
+                7);
+            uint8_t shortCurcuitValue = (data_[38][0] >> 3) & 0b00000111;
+            uint8_t shortCurcuitTime = data_[38][0] & 0b00000011;
+            uint8_t secOvercurrentValue = (data_[38][1] >> 3) & 0b00000111;
+            uint8_t secOvercurrentTime = (data_[38][1]) & 0b00001111;
+            switch (shortCurcuitValue)
+            {
+                case 0:
+                    ui->radioButton_0x38_02100->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x38_02101->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x38_02102->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x38_02103->setChecked(true);
+                break;
+                case 4:
+                    ui->radioButton_0x38_02104->setChecked(true);
+                break;
+                case 5:
+                    ui->radioButton_0x38_02105->setChecked(true);
+                break;
+                case 6:
+                    ui->radioButton_0x38_02106->setChecked(true);
+                break;
+                case 7:
+                    ui->radioButton_0x38_02107->setChecked(true);
+            }
+            switch (shortCurcuitTime)
+            {
+                case 0:
+                    ui->radioButton_0x38_0430->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x38_0431->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x38_0432->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x38_0433->setChecked(true);
+            }
+            switch (secOvercurrentValue)
+            {
+                case 0:
+                    ui->radioButton_0x38_032100->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x38_032101->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x38_032102->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x38_032103->setChecked(true);
+                break;
+                case 4:
+                    ui->radioButton_0x38_032104->setChecked(true);
+                break;
+                case 5:
+                    ui->radioButton_0x38_032105->setChecked(true);
+                break;
+                case 6:
+                    ui->radioButton_0x38_032106->setChecked(true);
+                break;
+                case 7:
+                    ui->radioButton_0x38_032107->setChecked(true);
+                break;
+                case 8:
+                    ui->radioButton_0x38_032108->setChecked(true);
+                break;
+                case 9:
+                    ui->radioButton_0x38_032109->setChecked(true);
+                break;
+                case 10:
+                    ui->radioButton_0x38_03210a->setChecked(true);
+                break;
+                case 11:
+                    ui->radioButton_0x38_03210b->setChecked(true);
+                break;
+                case 12:
+                    ui->radioButton_0x38_03210c->setChecked(true);
+                break;
+                case 13:
+                    ui->radioButton_0x38_03210d->setChecked(true);
+                break;
+                case 14:
+                    ui->radioButton_0x38_03210e->setChecked(true);
+                break;
+                case 15:
+                    ui->radioButton_0x38_03210f->setChecked(true);
+            }
+            switch (secOvercurrentTime)
+            {
+                case 0:
+                    ui->radioButton_0x38_06540->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x38_06541->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x38_06542->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x38_06543->setChecked(true);
+                break;
+                case 4:
+                    ui->radioButton_0x38_06544->setChecked(true);
+                break;
+                case 5:
+                    ui->radioButton_0x38_06545->setChecked(true);
+                break;
+                case 6:
+                    ui->radioButton_0x38_06546->setChecked(true);
+                break;
+                case 7:
+                    ui->radioButton_0x38_06547  ->setChecked(true);
+            }
+        }, // 0x38
+        [this](const std::vector<QByteArray>& data_)
+        {
+            uint8_t undervoltageDelay = data_[39][0] >> 6;
+            uint8_t overvoltageDelay = (data_[39][0] >> 4) & 0b00000011;
+            switch (undervoltageDelay)
+            {
+                case 0:
+                    ui->radioButton_0x39_0760->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x39_0761->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x39_0762->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x39_0763->setChecked(true);
+            }
+            switch (overvoltageDelay)
+            {
+                case 0:
+                    ui->radioButton_0x39_0540->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0x39_0541->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0x39_0542->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0x39_0543->setChecked(true);
+            }
+            ui->lineEdit_0x39_1->setText(QString::number(data_[39][1]));
+        }, // 0x39
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3a_0->setText(QString::number(data_[40][0]));
+            ui->lineEdit_0x3a_1->setText(QString::number(data_[40][1]));
+        }, // 0x3a
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3b_0->setText(QString::number(data_[41][0]));
+            ui->lineEdit_0x3b_1->setText(QString::number(data_[41][1]));
+        }, // 0x3b
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3c_0->setText(QString::number(data_[42][0]));
+            ui->lineEdit_0x3c_1->setText(QString::number(data_[42][1]));
+        }, // 0x3c
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3d_0->setText(QString::number(data_[43][0]));
+            ui->lineEdit_0x3d_1->setText(QString::number(data_[43][1]));
+        }, // 0x3d
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3e_0->setText(QString::number(data_[44][0]));
+            ui->lineEdit_0x3e_1->setText(QString::number(data_[44][1]));
+        }, // 0x3e
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0x3f_0->setText(QString::number(data_[45][0]));
+            ui->lineEdit_0x3f_1->setText(QString::number(data_[45][1]));
+        }, // 0x3f
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0xa0->setText(JBDStringToQString(data_[46]));
+        }, // 0xa0
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0xa1->setText(JBDStringToQString(data_[47]));
+        }, // 0xa1
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->lineEdit_0xa2->setText(JBDStringToQString(data_[48]));
+        }, // 0xa2
+        [this](const std::vector<QByteArray>& data_)
+        {
+            ui->label_0xaa_0->setText(QString::number(getUInt16InArray(
+                data_[49], 0)));
+            ui->label_0xaa_1->setText(QString::number(getUInt16InArray(
+                data_[49], 2)));
+            ui->label_0xaa_2->setText(QString::number(getUInt16InArray(
+                data_[49], 4)));
+            ui->label_0xaa_3->setText(QString::number(getUInt16InArray(
+                data_[49], 6)));
+            ui->label_0xaa_4->setText(QString::number(getUInt16InArray(
+                data_[49], 8)));
+            ui->label_0xaa_5->setText(QString::number(getUInt16InArray(
+                data_[49], 10)));
+            ui->label_0xaa_6->setText(QString::number(getUInt16InArray(
+                data_[49], 12)));
+            ui->label_0xaa_7->setText(QString::number(getUInt16InArray(
+                data_[49], 14)));
+            ui->label_0xaa_8->setText(QString::number(getUInt16InArray(
+                data_[49], 16)));
+            ui->label_0xaa_9->setText(QString::number(getUInt16InArray(
+                data_[49], 18)));
+            ui->label_0xaa_10->setText(QString::number(getUInt16InArray(
+                data_[49], 20)));
+        } // 0xaa
+    }),
+    ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
     QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
         SIGNAL(sgnSetManualMode()));
+    QObject::connect(ui->updateButton, &QPushButton::clicked,
+        ui->updateButton, [this](){ ui->updateButton->setEnabled(false); });
+    QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
+        SIGNAL(sgnReadingBegun()));
     QObject::connect(&parser_,
         SIGNAL(sgnSendDataToGUI(const std::vector<QByteArray>&)),
         SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
 }
 
-AddInfoWidget::~AddInfoWidget()
-{
-    delete ui;
-}
+AddInfoParser *AddInfoWidget::getParser() { return &parser_; }
+
+AddInfoWidget::~AddInfoWidget() { delete ui; }
 
 void AddInfoWidget::slotShowDataOnGUI(const std::vector<QByteArray>& data_)
 {
-    // TO DO: добавить обработку того, что не все регистры считались
-    // 0x03
-    ui->lineEdit_0x03->setText(getSoftwareVersion(data_[0][18]));
-    // 0x05
-    ui->lineEdit_0x05->setText(JBDStringToQString(data_[1]));
-    // 0x10 - 0x2c
-    ui->lineEdit_0x10->setText(QString::number(getUInt16InArray(data_[2], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x11->setText(QString::number(getUInt16InArray(data_[3], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x12->setText(QString::number(getUInt16InArray(data_[4], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x13->setText(QString::number(getUInt16InArray(data_[5], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x14->setText(QString::number(getUInt16InArray(data_[6], 0)
-        / 100.));
-    ui->lineEdit_0x15->setText(QByteArrayToDate(data_[7]));
-    ui->lineEdit_0x16->setText(QString::number(getUInt16InArray(data_[8], 0)));
-    ui->lineEdit_0x17->setText(QString::number(getUInt16InArray(data_[9], 0)));
-    ui->lineEdit_0x18->setText(getTemperature(data_[10]));
-    ui->lineEdit_0x19->setText(getTemperature(data_[11]));
-    ui->lineEdit_0x1a->setText(getTemperature(data_[12]));
-    ui->lineEdit_0x1b->setText(getTemperature(data_[13]));
-    ui->lineEdit_0x1c->setText(getTemperature(data_[14]));
-    ui->lineEdit_0x1d->setText(getTemperature(data_[15]));
-    ui->lineEdit_0x1e->setText(getTemperature(data_[16]));
-    ui->lineEdit_0x1f->setText(getTemperature(data_[17]));
-    ui->lineEdit_0x20->setText(QString::number(getUInt16InArray(data_[18], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x21->setText(QString::number(getUInt16InArray(data_[19], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x22->setText(QString::number(getUInt16InArray(data_[20], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x23->setText(QString::number(getUInt16InArray(data_[21], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x24->setText(QString::number(getUInt16InArray(data_[22], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x25->setText(QString::number(getUInt16InArray(data_[23], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x26->setText(QString::number(getUInt16InArray(data_[24], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x27->setText(QString::number(getUInt16InArray(data_[25], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x28->setText(QString::number(getUInt16InArray(data_[26], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x29->setText(QString::number(getUInt16InArray(data_[27], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x2a->setText(QString::number(getUInt16InArray(data_[28], 0)
-        / 1000., 'f', 3));
-    ui->lineEdit_0x2b->setText(QString::number(getUInt16InArray(data_[29], 0)
-        / 1000.));
-    ui->lineEdit_0x2c->setText(QString::number(getUInt16InArray(data_[30], 0)));
-    // 0x2e - thermoresistors' state
-    // TO DO !!!
-    // 0x32 - 0x35
-    ui->lineEdit_0x32->setText(QString::number(getUInt16InArray(data_[32], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x33->setText(QString::number(getUInt16InArray(data_[33], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x34->setText(QString::number(getUInt16InArray(data_[34], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x35->setText(QString::number(getUInt16InArray(data_[35], 0)
-        / 100., 'f', 2));
-    // 0x36, 0x37
-    ui->lineEdit_0x36->setText(QString::number(getUInt16InArray(data_[36], 0)
-        / 100., 'f', 2));
-    ui->lineEdit_0x37->setText(QString::number(getUInt16InArray(data_[37], 0)
-        / 100., 'f', 2));
-    // 0x38
-    ui->radioButton_0x38_07->setChecked((data_[38][0] & 0b10000000) >> 7);
-    uint8_t shortCurcuitValue = (data_[38][0] >> 3) & 0b00000111;
-    uint8_t shortCurcuitTime = data_[38][0] & 0b00000011;
-    uint8_t secOvercurrentValue = (data_[38][1] >> 3) & 0b00000111;
-    uint8_t secOvercurrentTime = (data_[38][1]) & 0b00001111;
-    switch (shortCurcuitValue)
+    std::vector<uint8_t> unreadRegisters;
+    for (int i = 0; i < dataSetters.size(); ++i)
     {
-        case 0:
-            ui->radioButton_0x38_02100->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x38_02101->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x38_02102->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x38_02103->setChecked(true);
-        break;
-        case 4:
-            ui->radioButton_0x38_02104->setChecked(true);
-        break;
-        case 5:
-            ui->radioButton_0x38_02105->setChecked(true);
-        break;
-        case 6:
-            ui->radioButton_0x38_02106->setChecked(true);
-        break;
-        case 7:
-            ui->radioButton_0x38_02107->setChecked(true);
+        if (data_[i].size() < expectedRegisterSizes[i])
+        {
+            unreadRegisters.push_back(i);
+        } else {
+            std::invoke(dataSetters[i], data_);
+        }
     }
-    switch (shortCurcuitTime)
+    if (!unreadRegisters.empty())
     {
-        case 0:
-            ui->radioButton_0x38_0430->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x38_0431->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x38_0432->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x38_0433->setChecked(true);
+    // TO DO: чтобы выводило названия данных, а не номера регистров
+        QString msg = "The following registers were failed to read: ";
+        for (int i = 0; i < unreadRegisters.size() - 1; ++i)
+        {
+            msg += "0x" + QString::number(unreadRegisters[i], 16) + ", ";
+        }
+        msg += "0x" + QString::number(unreadRegisters.back(), 16);
+        QMessageBox::information(this, "Unread registers", msg);
     }
-    switch (secOvercurrentValue)
-    {
-        case 0:
-            ui->radioButton_0x38_032100->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x38_032101->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x38_032102->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x38_032103->setChecked(true);
-        break;
-        case 4:
-            ui->radioButton_0x38_032104->setChecked(true);
-        break;
-        case 5:
-            ui->radioButton_0x38_032105->setChecked(true);
-        break;
-        case 6:
-            ui->radioButton_0x38_032106->setChecked(true);
-        break;
-        case 7:
-            ui->radioButton_0x38_032107->setChecked(true);
-        break;
-        case 8:
-            ui->radioButton_0x38_032108->setChecked(true);
-        break;
-        case 9:
-            ui->radioButton_0x38_032109->setChecked(true);
-        break;
-        case 10:
-            ui->radioButton_0x38_03210a->setChecked(true);
-        break;
-        case 11:
-            ui->radioButton_0x38_03210b->setChecked(true);
-        break;
-        case 12:
-            ui->radioButton_0x38_03210c->setChecked(true);
-        break;
-        case 13:
-            ui->radioButton_0x38_03210d->setChecked(true);
-        break;
-        case 14:
-            ui->radioButton_0x38_03210e->setChecked(true);
-        break;
-        case 15:
-            ui->radioButton_0x38_03210f->setChecked(true);
-    }
-    switch (secOvercurrentTime)
-    {
-        case 0:
-            ui->radioButton_0x38_06540->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x38_06541->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x38_06542->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x38_06543->setChecked(true);
-        break;
-        case 4:
-            ui->radioButton_0x38_06544->setChecked(true);
-        break;
-        case 5:
-            ui->radioButton_0x38_06545->setChecked(true);
-        break;
-        case 6:
-            ui->radioButton_0x38_06546->setChecked(true);
-        break;
-        case 7:
-            ui->radioButton_0x38_06547  ->setChecked(true);
-    }
-    // 0x39
-    uint8_t undervoltageDelay = data_[39][0] >> 6;
-    uint8_t overvoltageDelay = (data_[39][0] >> 4) & 0b00000011;
-    switch (undervoltageDelay)
-    {
-        case 0:
-            ui->radioButton_0x39_0760->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x39_0761->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x39_0762->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x39_0763->setChecked(true);
-    }
-    switch (overvoltageDelay)
-    {
-        case 0:
-            ui->radioButton_0x39_0540->setChecked(true);
-        break;
-        case 1:
-            ui->radioButton_0x39_0541->setChecked(true);
-        break;
-        case 2:
-            ui->radioButton_0x39_0542->setChecked(true);
-        break;
-        case 3:
-            ui->radioButton_0x39_0543->setChecked(true);
-    }
-    ui->lineEdit_0x39_1->setText(QString::number(data_[39][1]));
-    // 0x3a - 0x3f
-    ui->lineEdit_0x3a_0->setText(QString::number(data_[40][0]));
-    ui->lineEdit_0x3a_1->setText(QString::number(data_[40][1]));
-    ui->lineEdit_0x3b_0->setText(QString::number(data_[41][0]));
-    ui->lineEdit_0x3b_1->setText(QString::number(data_[41][1]));
-    ui->lineEdit_0x3c_0->setText(QString::number(data_[42][0]));
-    ui->lineEdit_0x3c_1->setText(QString::number(data_[42][1]));
-    ui->lineEdit_0x3d_0->setText(QString::number(data_[43][0]));
-    ui->lineEdit_0x3d_1->setText(QString::number(data_[43][1]));
-    ui->lineEdit_0x3e_0->setText(QString::number(data_[44][0]));
-    ui->lineEdit_0x3e_1->setText(QString::number(data_[44][1]));
-    ui->lineEdit_0x3f_0->setText(QString::number(data_[45][0]));
-    ui->lineEdit_0x3f_1->setText(QString::number(data_[45][1]));
-    // 0xa0, 0xa1, 0xa2
-    ui->lineEdit_0xa0->setText(JBDStringToQString(data_[46]));
-    ui->lineEdit_0xa1->setText(JBDStringToQString(data_[47]));
-    ui->lineEdit_0xa2->setText(JBDStringToQString(data_[48]));
-    // 0xaa
-    ui->label_0xaa_0->setText(QString::number(getUInt16InArray(data_[49], 0)));
-    ui->label_0xaa_1->setText(QString::number(getUInt16InArray(data_[49], 2)));
-    ui->label_0xaa_2->setText(QString::number(getUInt16InArray(data_[49], 4)));
-    ui->label_0xaa_3->setText(QString::number(getUInt16InArray(data_[49], 6)));
-    ui->label_0xaa_4->setText(QString::number(getUInt16InArray(data_[49], 8)));
-    ui->label_0xaa_5->setText(QString::number(getUInt16InArray(data_[49], 10)));
-    ui->label_0xaa_6->setText(QString::number(getUInt16InArray(data_[49], 12)));
-    ui->label_0xaa_7->setText(QString::number(getUInt16InArray(data_[49], 14)));
-    ui->label_0xaa_8->setText(QString::number(getUInt16InArray(data_[49], 16)));
-    ui->label_0xaa_9->setText(QString::number(getUInt16InArray(data_[49], 18)));
-    ui->label_0xaa_10->setText(QString::number(getUInt16InArray(data_[49], 20)));
+    ui->updateButton->setEnabled(true);
 }

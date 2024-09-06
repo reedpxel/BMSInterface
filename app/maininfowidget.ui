@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1060</width>
-    <height>706</height>
+    <width>1053</width>
+    <height>757</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>5</number>
+   </property>
    <item row="0" column="0">
     <widget class="QWidget" name="batterySliderWidget" native="true">
      <property name="sizePolicy">
@@ -122,7 +137,60 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableWidget" name="tempsTable"/>
+      <widget class="QTableWidget" name="tempsTable">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>90</height>
+        </size>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>false</bool>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="dragDropOverwriteMode">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
+       </property>
+       <property name="columnCount">
+        <number>2</number>
+       </property>
+       <attribute name="horizontalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>170</number>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Thermoresister number</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Temperature, °C</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item>
       <widget class="QGroupBox" name="groupBox">
@@ -156,13 +224,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Line overvoltage:</string>
+           <string>Line overvoltage</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -186,13 +254,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Line undervoltage:</string>
+           <string>Line undervoltage</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -216,13 +284,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Pack overvoltage:</string>
+           <string>Pack overvoltage</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -246,13 +314,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Pack undervoltage:</string>
+           <string>Pack undervoltage</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -276,13 +344,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Charge overheating:</string>
+           <string>Charge overheating</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -306,13 +374,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Charge underheating:</string>
+           <string>Charge underheating</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -336,13 +404,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Discharge overheating:</string>
+           <string>Discharge overheating</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -366,13 +434,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Discharge underheating:</string>
+           <string>Discharge underheating</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -396,13 +464,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Charge overcurrent:</string>
+           <string>Charge overcurrent</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -426,13 +494,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Discharge overcurrent:</string>
+           <string>Discharge overcurrent</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -456,13 +524,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Short circuit:</string>
+           <string>Short circuit</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -486,13 +554,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>Frontend IC error:</string>
+           <string>Frontend IC error</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -516,13 +584,13 @@
            <enum>Qt::NoContextMenu</enum>
           </property>
           <property name="layoutDirection">
-           <enum>Qt::RightToLeft</enum>
+           <enum>Qt::LeftToRight</enum>
           </property>
           <property name="text">
-           <string>FETs locked by config:</string>
+           <string>FETs locked by config</string>
           </property>
           <property name="checkable">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -541,7 +609,51 @@
       </widget>
      </item>
      <item>
-      <widget class="QTableWidget" name="linesVoltageTable"/>
+      <widget class="QTableWidget" name="linesVoltageTable">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>false</bool>
+       </property>
+       <property name="showDropIndicator" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="dragDropOverwriteMode">
+        <bool>false</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::NoSelection</enum>
+       </property>
+       <property name="columnCount">
+        <number>2</number>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>170</number>
+       </attribute>
+       <attribute name="horizontalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="horizontalHeaderStretchLastSection">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="verticalHeaderVisible">
+        <bool>false</bool>
+       </attribute>
+       <attribute name="verticalHeaderHighlightSections">
+        <bool>false</bool>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Line number</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Voltage, V</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -568,7 +680,7 @@
      <item row="0" column="1">
       <widget class="QLabel" name="linesBalanceLabel">
        <property name="text">
-        <string>wwwwwwwwwwwww</string>
+        <string/>
        </property>
       </widget>
      </item>

@@ -31,13 +31,18 @@ Q_OBJECT
     inline uint8_t getRegister(const QByteArray& array);
     inline uint16_t twoBytesToUInt(uint8_t high, uint8_t low);
 signals:
+    void sgnUncheckedMessageGot(const QByteArray&);
     void sgnSetAutomaticMode();
     void sgnSetManualMode();
     void sgninfoUpdated();
     void sgnSend(const QByteArray&);
     void sgnSendDataToGUI(const std::vector<QByteArray>&);
+    void sgnReadingBegun();
+    void sgnReadingUpdate(unsigned);
+    void sgnReadingEnded();
 public:
     AddInfoParser(COMPortReader* reader);
+    size_t getAmountOfQueries();
 public slots:
     void slotParseMessage(const QByteArray&);
     void slotSendNextMessageOrExit();

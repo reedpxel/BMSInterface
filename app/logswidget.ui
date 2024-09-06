@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1045</width>
-    <height>627</height>
+    <height>639</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="1">
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="plotterBase" native="true">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -25,7 +25,7 @@
      <property name="minimumSize">
       <size>
        <width>800</width>
-       <height>500</height>
+       <height>450</height>
       </size>
      </property>
     </widget>
@@ -37,7 +37,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QRadioButton" name="radioButton">
+       <widget class="QRadioButton" name="radioButtonTotalVoltage">
         <property name="text">
          <string>Total voltage</string>
         </property>
@@ -47,49 +47,49 @@
        </widget>
       </item>
       <item row="0" column="1">
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="radioButtonCurrentCapacity">
         <property name="text">
          <string>Current capacity</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QRadioButton" name="radioButton_5">
+       <widget class="QRadioButton" name="radioButtonTemperatures">
         <property name="text">
          <string>Temperatures</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="showCurrentWindowButton">
         <property name="text">
          <string>Show on current window</string>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QRadioButton" name="radioButton_2">
+       <widget class="QRadioButton" name="radioButtonCurrent">
         <property name="text">
          <string>Current</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
-       <widget class="QRadioButton" name="radioButton_4">
+       <widget class="QRadioButton" name="radioButtonLineVoltage">
         <property name="text">
          <string>Lines' voltage</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QRadioButton" name="radioButton_6">
+       <widget class="QRadioButton" name="radioButtonDifference">
         <property name="text">
          <string>Lines' voltages difference</string>
         </property>
        </widget>
       </item>
       <item row="1" column="3">
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="showSeparateWindowButton">
         <property name="text">
          <string>Show on a separate window</string>
         </property>
@@ -105,7 +105,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="checkBoxTotalVoltage">
         <property name="text">
          <string>Total voltage</string>
         </property>
@@ -115,7 +115,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="checkBoxCurrent">
         <property name="text">
          <string>Current</string>
         </property>
@@ -125,7 +125,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="checkBoxCurrentCapacity">
         <property name="text">
          <string>Current capacity</string>
         </property>
@@ -135,7 +135,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_4">
+       <widget class="QCheckBox" name="checkBoxAmountOfCycles">
         <property name="text">
          <string>Amount of cycles</string>
         </property>
@@ -145,7 +145,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_5">
+       <widget class="QCheckBox" name="checkBoxTemperatures">
         <property name="text">
          <string>Temperatures</string>
         </property>
@@ -155,7 +155,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_6">
+       <widget class="QCheckBox" name="checkBoxErrors">
         <property name="text">
          <string>Errors</string>
         </property>
@@ -165,7 +165,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_7">
+       <widget class="QCheckBox" name="checkBoxLineBalanceStatus">
         <property name="text">
          <string>Lines' balance state</string>
         </property>
@@ -175,7 +175,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_8">
+       <widget class="QCheckBox" name="checkBoxFETState">
         <property name="text">
          <string>FETs' state</string>
         </property>
@@ -185,7 +185,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_9">
+       <widget class="QCheckBox" name="checkBoxLineVoltage">
         <property name="text">
          <string>Lines' voltage</string>
         </property>
@@ -195,7 +195,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QCheckBox" name="checkBox_10">
+       <widget class="QCheckBox" name="checkBoxDifference">
         <property name="text">
          <string>Lines' voltages difference</string>
         </property>
@@ -205,14 +205,14 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="keepLogsButton">
         <property name="text">
          <string>Keep logs</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
+       <widget class="QLabel" name="stateLabel">
         <property name="text">
          <string>No logs are kept</string>
         </property>

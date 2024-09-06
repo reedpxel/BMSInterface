@@ -106,23 +106,20 @@ void COMPortReader::slotSetAutomaticMode()
 {
     writeTimer->start(MAIN_INFO_TIMER_STEP);
     modeIsAutomatic = true;
-    QObject::disconnect(port, SIGNAL(readyRead()), this,
-        SLOT(slotReadyReadManual()));
     QObject::connect(port, SIGNAL(readyRead()), this,
         SLOT(slotReadyReadAutomatic()));
+    QObject::disconnect(port, SIGNAL(readyRead()), this,
+        SLOT(slotReadyReadManual()));
 }
 
 void COMPortReader::slotSetManualMode()
 {
-    writeTimer->stop();
-    modeIsAutomatic = false;
     QObject::connect(port, SIGNAL(readyRead()), this,
         SLOT(slotReadyReadManual()));
     QObject::disconnect(port, SIGNAL(readyRead()), this,
         SLOT(slotReadyReadAutomatic()));
-    QTest::qWait(100);
-    // data from the main messages may remain in buffer
-    port->readAll(); // flushes the input buffer;
+    writeTimer->stop();
+    modeIsAutomatic = false;
     emit sgnManualModeIsSet();
 }
 
@@ -130,3 +127,4 @@ void COMPortReader::slotWriteManually(const QByteArray& message)
 {
     port->write(message);
 }
+

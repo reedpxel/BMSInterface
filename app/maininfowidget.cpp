@@ -1,13 +1,13 @@
 #include "maininfowidget.h"
 #include "ui_maininfowidget.h"
 
-MainInfoWidget::MainInfoWidget(QWidget *parent)
-    : QWidget(parent)
-    , ui(new Ui::MainInfoWidget)
+MainInfoWidget::MainInfoWidget(QWidget *parent) : QWidget(parent),
+    ui(new Ui::MainInfoWidget)
 {
     ui->setupUi(this);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
-    batterySlider->resize(ui->batterySliderWidget->size());
+    batterySlider->resize(ui->batterySliderWidget->width() - 10,
+        ui->batterySliderWidget->height() - 10);
     ui->tempsTable->setColumnCount(2);
     ui->linesVoltageTable->setColumnCount(2);
 }
@@ -17,10 +17,7 @@ void MainInfoWidget::resizeEvent(QResizeEvent*)
     batterySlider->resize(ui->batterySliderWidget->size());
 }
 
-MainInfoWidget::~MainInfoWidget()
-{
-    delete ui;
-}
+MainInfoWidget::~MainInfoWidget() { delete ui; }
 
 void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
 {
@@ -48,16 +45,16 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
 
     // voltage, current, capacity, cycles
     ui->totalVoltageLabel->setText(
-        QString::number(mainInfo.totalVoltage / 100.));
-    ui->currentLabel->setText(QString::number(mainInfo.current / 100.));
+        QString::number(mainInfo.totalVoltage / 100., 'f', 2));
+    ui->currentLabel->setText(QString::number(mainInfo.current / 100., 'f', 2));
     ui->currentCapacityLabel->setText(
-        QString::number(mainInfo.currentCapacity / 100.));
+        QString::number(mainInfo.currentCapacity / 100., 'f', 2));
     ui->maxCapacityLabel->setText(
-        QString::number(mainInfo.maximumCapacity / 100.));
+        QString::number(mainInfo.maximumCapacity / 100., 'f', 2));
     ui->cyclesLabel->setText(QString::number(mainInfo.cycles));
 
     // battery slider
-    batterySlider->slotSetPercent(mainInfo.capacityInPercents);
+    batterySlider->slotSetValue(mainInfo.capacityInPercents);
 
     // temperatures
     if (ui->tempsTable->rowCount() != mainInfo.temperatures.size())
@@ -66,17 +63,17 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
         for (int i = 0; i < mainInfo.temperatures.size(); ++i)
         {
             QTableWidgetItem* item0 = new QTableWidgetItem;
-            item0->setText(QString::number(i + 1));
+            item0->setText("Thermoresistor " + QString::number(i + 1) + ":");
             ui->tempsTable->setItem(i, 0, item0);
             QTableWidgetItem* item1 = new QTableWidgetItem;
             ui->tempsTable->setItem(i, 1, item1);
-            item1->setText(QString::number(mainInfo.temperatures[i]));
+            item1->setText(QString::number(mainInfo.temperatures[i], 'f', 1));
         }
     } else {
         for (int i = 0; i < mainInfo.temperatures.size(); ++i)
         {
             ui->tempsTable->item(i, 1)->setText(
-                QString::number(mainInfo.temperatures[i] / 10.));
+                QString::number(mainInfo.temperatures[i] / 10., 'f', 1));
         }
     }
 
@@ -106,13 +103,14 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
             ui->linesVoltageTable->setItem(i, 0, item0);
             QTableWidgetItem* item1 = new QTableWidgetItem;
             ui->linesVoltageTable->setItem(i, 1, item1);
-            item1->setText(QString::number(mainInfo.linesVoltage[i] / 1000.));
+            item1->setText(QString::number(
+                mainInfo.linesVoltage[i] / 1000., 'f', 3));
         }
     } else {
         for (int i = 0; i < mainInfo.lines; ++i)
         {
             ui->linesVoltageTable->item(i, 1)->setText(
-                QString::number(mainInfo.linesVoltage[i] / 1000.));
+                QString::number(mainInfo.linesVoltage[i] / 1000., 'f', 3));
         }
     }
     ui->differenceLabel->setText(QString::number(mainInfo.diff / 1000.));

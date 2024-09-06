@@ -39,7 +39,6 @@ public:
     void parseLineVoltageMessage(const QByteArray& message);
 signals:
     void sgnDataReceived(const MainInfo&);
-    void sgnSetManualMode();
 };
 
 #endif // MAININFOPARSER_H

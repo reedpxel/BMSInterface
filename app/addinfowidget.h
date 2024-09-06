@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <vector>
 #include <iostream>
+#include <functional>
 #include "addinfoparser.h"
 #include "mainwindow.h"
 
@@ -152,6 +153,9 @@ Q_OBJECT
     // AddInfoStruct addInfoStruct;
 private:
     AddInfoParser parser_;
+    std::vector<uint8_t> expectedRegisterSizes;
+    std::vector<std::function<void(const std::vector<QByteArray>&)>>
+        dataSetters;
 
     Ui::AddInfoWidget *ui;
 
@@ -162,7 +166,9 @@ private:
     QString QByteArrayToDate(const QByteArray& array);
 public:
     explicit AddInfoWidget(QWidget* parent = nullptr);
+    AddInfoParser* getParser();
     ~AddInfoWidget();
+
 
 public slots:
     void slotShowDataOnGUI(const std::vector<QByteArray>& data_);

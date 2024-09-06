@@ -13,6 +13,8 @@ SOURCES += \
     addinfowidget.cpp \
     batteryslider.cpp \
     comportreader.cpp \
+    graphplotter.cpp \
+    jbdparser.cpp \
     logswidget.cpp \
     main.cpp \
     maininfoparser.cpp \
@@ -24,6 +26,8 @@ HEADERS += \
     addinfowidget.h \
     batteryslider.h \
     comportreader.h \
+    graphplotter.h \
+    jbdparser.h \
     logswidget.h \
     maininfoparser.h \
     maininfowidget.h \

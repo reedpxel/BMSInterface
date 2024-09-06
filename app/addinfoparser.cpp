@@ -42,14 +42,6 @@ QByteArray AddInfoParser::getMessageWriteRegister(uint8_t register_,
     memcpy(msg_data.data() + 4, data_.data(), data_.size());
     setCrc(msg_data.data() + 2, msg_data.data() + data_.size() + 3,
         msg_data.data() + data_.size() + 4);
-    // QByteArray arr(reinterpret_cast<char*>(msg_data.data()),
-    //     msg_data.size());
-    // for (int i = 0; i < arr.size(); ++i)
-    // {
-    //     std::cout << std::hex << static_cast<uint16_t>(arr[i] & 0xff) << ' ';
-    // }
-    // std::cout << '\n';
-    // return arr;
     return QByteArray(reinterpret_cast<char*>(msg_data.data()),
         msg_data.size());
 }
@@ -126,8 +118,11 @@ AddInfoParser::AddInfoParser(COMPortReader* reader) :
         SLOT(slotSetAutomaticMode()));
 }
 
+size_t AddInfoParser::getAmountOfQueries() { return registersToRead.size(); }
+
 void AddInfoParser::slotParseMessage(const QByteArray& array)
 {
+    emit sgnUncheckedMessageGot(array);
     std::cout << "A message is got: ";
     for (int i = 0; i < array.size(); ++i)
     {
@@ -144,6 +139,7 @@ void AddInfoParser::slotParseMessage(const QByteArray& array)
             registersContent[currentQuery - 1] = getMessageUsefulData(array);
         }
         ++currentQuery;
+        emit sgnReadingUpdate(currentQuery);
     } else {
         std::cout << "not viable or wrong register, attempt " << attempt <<
             '\n';
@@ -157,6 +153,7 @@ void AddInfoParser::slotSendNextMessageOrExit()
 {
     if (currentQuery == querySequence.size())
     {
+        emit sgnReadingEnded();
         std::cout << "All queries are got, the content is:\n";
         for (int i = 0; i < registersContent.size(); ++i)
         {
@@ -168,7 +165,7 @@ void AddInfoParser::slotSendNextMessageOrExit()
                     (static_cast<uint16_t>(registersContent[i][j]) & 0xff) <<
                     ' ';
             }
-            std::cout << '\n';
+            std::cout << ' ' << std::dec <<  registersContent[i].size() << '\n';
         }
         emit sgnSendDataToGUI(registersContent);
         emit sgnSetAutomaticMode();

@@ -40,20 +40,50 @@ void MainWindow::drawConnectedWindow()
     QGridLayout* logsLayout = new QGridLayout;
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
+    QObject::connect(addInfoWidget->getParser(),
+        SIGNAL(sgnReadingBegun()),
+        SLOT(slotAddInfoReadBegun()));
+    QObject::connect(addInfoWidget->getParser(),
+        SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
+    QObject::connect(addInfoWidget->getParser(),
+        SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
+    QObject::connect(&parser, SIGNAL(sgnDataReceived(const MainInfo&)),
+        logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
+    // connections that send messages to status bar
+    connect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+        SLOT(slotSetStatusBarMessage(const QByteArray&)));
+    connect(addInfoWidget->getParser(),
+        SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
+        SLOT(slotSetStatusBarMessage(const QByteArray&)));
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
-    ui(nullptr), reader(), parser(),
+    ui(nullptr), /*tray(new QSystemTrayIcon(this)), trayMenu(new QMenu(this)),*/
+    reader(), parser(),
     noConnectionPixmap(nullptr),
     noConnectionWidget(nullptr),
     addInfoWidget(nullptr)
 {
+    // tray->setIcon(QPixmap(":/new/images/logo.png"));
+
+    // QAction* actionHide = new QAction("Hide window", this);
+    // QAction* actionStopLoggingAndQuit = new QAction("Stop logging and quit");
+    // connect(actionHide, SIGNAL(triggered()), SLOT(hide()));
+    // connect(actionStopLoggingAndQuit, SIGNAL(triggered()),
+    //     SLOT(slotStopLoggingAndQuit()));
+    // trayMenu->addAction(actionHide);
+    // trayMenu->addAction(actionStopLoggingAndQuit);
+    // tray->setContextMenu(trayMenu);
+    // tray->show();
+
     noConnectionPixmap = new QPixmap(
         QPixmap(":/new/images/no-connection.png").scaled(QSize(300, 300),
         Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setMinimumSize(1150, 650);
     setWindowTitle("BMSInterface");
+
     drawNoConnectionWindow();
+
     statusBar()->showMessage("");
     connect(&reader, SIGNAL(sgnNoPortsFound(size_t)),
         SLOT(slotNoPortsFound(size_t)));
@@ -74,6 +104,8 @@ MainWindow::~MainWindow()
 }
 
 COMPortReader* MainWindow::getReader() { return &reader; }
+
+// void MainWindow::closeEvent(QCloseEvent*) { slotCloseOrHide(); }
 
 void MainWindow::slotNoPortsFound(size_t attempt)
 {
@@ -100,7 +132,48 @@ void MainWindow::slotPortClosed()
 
 void MainWindow::slotDataGot(const QByteArray& arr)
 {
-
-    statusBar()->showMessage("Received: " + arr.toHex(' '), 500);
+    emit sgnMessageGot(arr);
     parser.parseMessage(arr);
+}
+
+void MainWindow::slotAddInfoReadBegun()
+{
+    addInfoReadingProgress = new QProgressBar(ui->statusBar);
+    ui->statusBar->addPermanentWidget(addInfoReadingProgress);
+    addInfoReadingProgress->setRange(0, addInfoWidget->getParser()->
+        getAmountOfQueries());
+}
+
+void MainWindow::slotAddInfoUpdated(unsigned currentValue)
+{
+    addInfoReadingProgress->setValue(currentValue);
+}
+
+void MainWindow::slotAddInfoReadEnded()
+{
+    delete addInfoReadingProgress;
+    addInfoReadingProgress = nullptr; // is it necessary?
+}
+
+void MainWindow::slotSetStatusBarMessage(const QByteArray& ba)
+{
+    statusBar()->showMessage("Recieved: " + ba.toHex(' '), 2000);
+}
+
+void MainWindow::on_actionShow_received_data_triggered(bool checked)
+{
+    if (checked)
+    {
+        connect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+            SLOT(slotSetStatusBarMessage(const QByteArray&)));
+        connect(addInfoWidget->getParser(),
+            SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
+            SLOT(slotSetStatusBarMessage(const QByteArray&)));
+    } else {
+        QObject::disconnect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+            this, SLOT(slotSetStatusBarMessage(const QByteArray&)));
+        QObject::disconnect(addInfoWidget->getParser(),
+            SIGNAL(sgnUncheckedMessageGot(const QByteArray&)), this,
+            SLOT(slotSetStatusBarMessage(const QByteArray&)));
+    }
 }

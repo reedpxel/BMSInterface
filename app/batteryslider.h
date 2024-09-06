@@ -5,14 +5,13 @@
 class BatterySlider : public QWidget
 {
 Q_OBJECT
-    int value;
-
+    int percent_;
+    QPixmap* batteryPixmap;
 public:
-    virtual void paintEvent(QPaintEvent*);
     BatterySlider(QWidget* parent = nullptr);
-    int percent();
+    virtual void paintEvent(QPaintEvent*);
 public slots:
-    void slotSetPercent(int percent);
+    void slotSetValue(int percent);
 };
 
 #endif // BATTERYSLIDER_H

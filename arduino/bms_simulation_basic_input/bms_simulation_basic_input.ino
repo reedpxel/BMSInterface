@@ -102,6 +102,58 @@ SoftwareSerial swSerial(RX, TX);
 bool output_03_flag = false;
 bool output_04_flag = false;
 
+uint64_t randomValue = 0;
+uint64_t a = 106;
+uint64_t c = 1283;
+uint64_t m = 6075;
+
+uint64_t get_random_number()
+{
+  randomValue = (a * randomValue + c) % m;
+  return randomValue;
+}
+
+void randomize_uint16_t(uint8_t* high, int dist)
+{
+  int16_t diff = get_random_number() % (2 * dist + 1) - dist;
+  /* arduino uno has little endian CPU!
+  uint16_t value_ = *reinterpret_cast<uint16_t*>(high);
+  is UB, because is violates strict aliasing rule
+  The rule forbids pointer casts except of:
+  - int* <-> unsigned*
+  - int* -> cv int*\cv unsigned*
+  - int* -> char*\uint8_t*\int8_t* (not in the opposite direction)
+  - int* -> AggregrateType* (<-?), where
+  struct AggregrateType
+  {
+    int x;
+  };
+  The reason is that compiler may optimize such code incorrectly:
+  int f(int* pi, float* pf)
+  {
+    *pi = 1;
+    *pf = 2;
+    return *pi;
+  } 
+
+  int main()
+  {
+    int i = 5;
+    return f(&i, reinterpret_cast<float*>(&i));
+  }
+  Main may return 1, because compiler may compile it the following way:
+  mov dword ptr[register1] 1
+  mov dword ptr[register2] 2
+  mov eax 1 // compiler does not see that pointers are the same and 
+  // optimizes incorrectly
+  */
+  uint16_t value_ = (static_cast<uint16_t>(*high) << 8) + 
+    + *(high + 1);
+  value_ += diff;
+  *high = static_cast<uint8_t>(value_ >> 8);
+  *(high + 1) = static_cast<uint8_t>(value_);
+}
+
 int register_binary_search(uint8_t value, uint8_t* registers, uint8_t sz)
 {
   if (value < registers[0] || value > registers[sz - 1]) return -1;
@@ -144,6 +196,7 @@ void loop()
 {
   if (!swSerial.available()) return;
   uint64_t current_time = millis();
+  randomValue = millis();
   while (millis() - current_time < 70);
   int i = 0;
   Serial.print("Received: ");
@@ -167,11 +220,10 @@ void loop()
     strcpy(output_buffer, error_message); // мб поменять src и dest
   } else { // регистр найден
     // сообщение с содержимым регистра
-    // TO DO: рандомизировать значения в регистраx 0x03 и 0x04, чтобы графики не
-    // были ровными линиями
     if (input_buffer[1] == 0xa5) // reading
     {
       Serial.println("reading");
+      // Serial.print(voltage_, HEX);
       message_size = registers_sizes[register_] + 7;
       uint8_t message[message_size] = {0};
       message[0] = 0xdd;
@@ -201,4 +253,23 @@ void loop()
   Serial.println();
   memset(input_buffer, 0, sizeof(input_buffer));
   memset(output_buffer, 0, sizeof(output_buffer));
+  // рандомизация 0x03 и 0x04
+  randomize_uint16_t(registers_values_buffer + 4, 10);
+  randomize_uint16_t(registers_values_buffer + 6, 4);
+  randomize_uint16_t(registers_values_buffer + 8, 6);
+  uint16_t currentCharge = (registers_values_buffer[8] << 8) + 
+    registers_values_buffer[9];
+  uint16_t fullCharge = (registers_values_buffer[10] << 8) + 
+    registers_values_buffer[11];
+  registers_values_buffer[23] = static_cast<uint8_t>(
+    static_cast<float>(currentCharge) * 100 / fullCharge);
+  Serial.print(registers_values_buffer[23], HEX);
+  for (int i = 0; i < 3; ++i)
+  {
+    randomize_uint16_t(registers_values_buffer + 27 + 2 * i, 2);
+  }
+  for (int i = 0; i < 13; ++i)
+  {
+    randomize_uint16_t(registers_values_buffer + 33 + 2 * i, 1);
+  }
 }

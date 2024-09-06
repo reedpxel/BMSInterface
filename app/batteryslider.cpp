@@ -1,36 +1,49 @@
 #include "batteryslider.h"
 
+
+BatterySlider::BatterySlider(QWidget* parent) : QWidget(parent), percent_(50),
+    batteryPixmap(new QPixmap(":/new/images/battery.png")) {}
+
 void BatterySlider::paintEvent(QPaintEvent*)
 {
-    QPainter painter(this);
-    QColor color_;
-    if (value <= 0) color_ = QColor(255, 0, 0);
-    else if (value >= 100) color_ = QColor(0, 255, 0);
-    else color_ = QColor(255 * pow((100 - value) / 100., 0.1),
-        255 * pow((value / 100.), 0.6), 30);
-    QBrush brush_(color_);
-    painter.fillRect(QRect(0, 0, width(), height()), brush_);
-    painter.setPen(QPen(QBrush(QColor(0, 0, 0)), 3));
-    painter.drawRect(0, 0, width(), height());
-    painter.setPen(QPen(QBrush(QColor(255, 255, 255)), 10));
+    QPainter painter_(this);
+    painter_.setRenderHint(QPainter::SmoothPixmapTransform, true);
+    QRectF greenRect;
+    if (percent_ <= 0)
+    {
+        greenRect = QRectF(
+            0.0678 * width(),
+            0.913 * height(),
+            0.864 * width(),
+            0);
+    } else if (percent_ >= 100) {
+        greenRect = QRectF(
+            0.0678 * width(),
+            0.127 * height(),
+            0.864 * width(),
+            0.786 * height());
+    } else {
+        greenRect = QRectF(
+        0.0678 * width(),
+        (0.786 * (100 - percent_) / 100. + 0.127)* height(),
+        0.864 * width(),
+        0.786 * percent_ / 100. * height());
+    }
+    painter_.fillRect(greenRect, QBrush(QColor(0, 255, 0)));
+    painter_.drawPixmap(QRect(0, 0, width(), height()), *batteryPixmap);
+    painter_.setPen(QPen(QColor(0, 0, 0), 20));
+    painter_.setFont(QFont("Times new roman", 20));
     QFont f("Arial", 26, QFont::Bold);
-    painter.setFont(f);
-    QLabel label(QString::number(value) + " %");
+    painter_.setFont(f);
+    QLabel label(QString::number(percent_) + " %");
     label.setFont(f);
-    painter.drawText((width() -
+    painter_.drawText((width() -
         label.fontMetrics().boundingRect(label.text()).width()) / 2,
-        (height() + 13) / 2, QString::number(value) + " %");
+        (height() + 13) / 2, QString::number(percent_) + " %");
 }
 
-BatterySlider::BatterySlider(QWidget* parent) : QWidget(parent), value(0)
+void BatterySlider::slotSetValue(int percent)
 {
-    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-}
-
-void BatterySlider::slotSetPercent(int percent)
-{
-    value = percent;
+    percent_ = percent;
     repaint();
 }
-
-int BatterySlider::percent() { return value; }

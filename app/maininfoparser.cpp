@@ -27,6 +27,11 @@ MainInfoParser::MainInfoParser() : QObject(),
 
 void MainInfoParser::parseMessage(const QByteArray &message)
 {
+    if (message.size() < 7)
+    {
+        mainInfo.error = 2;
+        return;
+    }
     if (static_cast<uint8_t>(message.front()) != 0xDD ||
         static_cast<uint8_t>(message.back()) != 0x77)
     {
@@ -75,8 +80,9 @@ void MainInfoParser::parseMainInfoMessage(const QByteArray& message)
     mainInfo.temperatures.resize(message[26]);
     for (int i = 0; i < mainInfo.temperatures.size(); ++i)
     {
-        mainInfo.temperatures[i] = 2731 -
-            twoBytesToInt(message.data() + 27 + 2 * i);
+        // here may be an error
+        mainInfo.temperatures[i] = twoBytesToInt(message.data() + 27 + 2 * i) -
+            2731;
     }
     emit sgnDataReceived(mainInfo);
 }
