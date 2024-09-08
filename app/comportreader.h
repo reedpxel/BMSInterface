@@ -20,6 +20,9 @@ class COMPortReader : public QObject
 Q_OBJECT
     QSerialPort* port;
     bool modeIsAutomatic;
+    bool lastQueryAnswered; // this variable is checked before sending a query
+    // if is false,  no reply got from BMS => BMS is absent
+    // maybe it must be atomic
     QTimer* writeTimer;
     int timerId;
     bool isConnected;
@@ -41,6 +44,7 @@ signals:
     void sgnDataGotAutomatic(const QByteArray&);
     void sgnDataGotManual(const QByteArray&);
     void sgnManualModeIsSet();
+    void sgnNoBMS();
 public slots:
     bool slotSearchForPorts();
     void slotReadyReadAutomatic();

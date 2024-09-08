@@ -19,9 +19,6 @@ class MainWindow : public QMainWindow
 Q_OBJECT
     Ui::MainWindow* ui;
 
-    // QSystemTrayIcon* tray;
-    // QMenu* trayMenu;
-
     MainInfoWidget* mainInfoWidget;
     AddInfoWidget* addInfoWidget;
     LogsWidget* logsWidget;
@@ -40,7 +37,6 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     COMPortReader* getReader();
-    // virtual void closeEvent(QCloseEvent*);
 signals:
     void sgnMessageGot(const QByteArray&);
 public slots:
@@ -53,8 +49,6 @@ public slots:
     void slotAddInfoUpdated(unsigned currentValue);
     void slotAddInfoReadEnded();
     void slotSetStatusBarMessage(const QByteArray&);
-    // void slotCloseOrHide();
-    // void slotStopLoggingAndQuit();
 private slots:
     void on_actionShow_received_data_triggered(bool checked);
 };

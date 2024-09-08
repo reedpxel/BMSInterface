@@ -18,13 +18,16 @@ uint16_t JBDParser::getCrc(const QByteArray& array)
     {
         tmp -= (array[i] & 0x00ff); // how it works ???
         // (uint8_t)0xab -> (uint16_t)0xffab, а не (uint16_t)0x00ab
+        // answer: reinterpret_cast<uint16_t*>(uint8_t*) is forbidden according
+        // to strict aliasing rule, the result is UB
     }
     return tmp;
 }
 
-uint16_t JBDParser::twoBytesToUInt(const uint8_t* high)
+uint16_t JBDParser::twoBytesToUInt(const char* high)
 {
-    uint16_t res = (*high << 8) + *(high + 1);
+    const uint8_t* pUHigh = reinterpret_cast<const uint8_t*>(high);
+    uint16_t res = (*pUHigh << 8) + *(pUHigh + 1);
     return res;
 }
 
@@ -52,21 +55,43 @@ QByteArray JBDParser::getMessageWriteRegister(uint8_t register_,
         msg_data.size());
 }
 
-bool JBDParser::messageIsViable(const QByteArray& message)
+bool JBDParser::messageIsViable(const QByteArray& message, uint8_t* errorNumber)
 {
-    if (message.size() < 7) return false;
+    /*
+        0 - no error
+        1 - no messages got
+        2 - wrong message length
+        3 - message does not begin at 0xDD or does not end at 0x77
+        4 - error from BMS
+        5 - wrong crc
+    */
+    if (message.isEmpty())
+    {
+        if (errorNumber) *errorNumber = 1;
+        return false;
+    }
+    if (message.size() < 7)
+    {
+        if (errorNumber) *errorNumber = 2;
+        return false;
+    }
     const uint8_t* arr_data = reinterpret_cast<const uint8_t*>(message.data());
     if (arr_data[0] != 0xdd || arr_data[message.size() - 1] != 0x77)
     {
+        if (errorNumber) *errorNumber = 3;
         return false;
     }
-    if (arr_data[2]) return false;
-    if (twoBytesToUInt(reinterpret_cast<const uint8_t*>(arr_data + message.size() - 3)) != getCrc(message))
+    if (arr_data[2])
+    {
+        if (errorNumber) *errorNumber = 4;
+        return false;
+    }
+    if (twoBytesToUInt(message.data() + message.size() - 3) != getCrc(message))
     {
         std::cout << "actual CRC: " <<
-            twoBytesToUInt(reinterpret_cast<const uint8_t*>(arr_data + message.size() - 3)/*arr_data[message.size() - 3],
-            arr_data[message.size() - 2]*/) <<
+            twoBytesToUInt(message.data() + message.size() - 3) <<
             " counted CRC: " << getCrc(message) << '\n';
+        *errorNumber = 5;
         return false;
     }
     return true;

@@ -4,6 +4,7 @@
 #include <vector>
 #include <QByteArray>
 #include <climits>
+#include "jbdparser.h"
 
 struct MainInfo
 {
@@ -24,15 +25,12 @@ struct MainInfo
     int diff;
 };
 
-class MainInfoParser : public QObject
+class MainInfoParser : public QObject, public JBDParser
 {
 Q_OBJECT
-    int twoBytesToInt(const char* pHigh);
-    unsigned short twoBytesToUShort(const char* pHigh);
-
-public:
     MainInfo mainInfo;
 
+public:
     MainInfoParser();
     void parseMessage(const QByteArray& message);
     void parseMainInfoMessage(const QByteArray& message);

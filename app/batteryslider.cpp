@@ -2,48 +2,57 @@
 
 
 BatterySlider::BatterySlider(QWidget* parent) : QWidget(parent), percent_(50),
-    batteryPixmap(new QPixmap(":/new/images/battery.png")) {}
+    isActive(false), batteryPixmap(new QPixmap(":/new/images/battery.png")) {}
 
 void BatterySlider::paintEvent(QPaintEvent*)
 {
     QPainter painter_(this);
     painter_.setRenderHint(QPainter::SmoothPixmapTransform, true);
     QRectF greenRect;
-    if (percent_ <= 0)
+    if (isActive)
     {
-        greenRect = QRectF(
+        if (percent_ <= 0)
+        {
+            greenRect = QRectF(
+                0.0678 * width(),
+                0.913 * height(),
+                0.864 * width(),
+                0);
+        } else if (percent_ >= 100) {
+            greenRect = QRectF(
+                0.0678 * width(),
+                0.127 * height(),
+                0.864 * width(),
+                0.786 * height());
+        } else {
+            greenRect = QRectF(
             0.0678 * width(),
-            0.913 * height(),
+            (0.786 * (100 - percent_) / 100. + 0.127)* height(),
             0.864 * width(),
-            0);
-    } else if (percent_ >= 100) {
-        greenRect = QRectF(
-            0.0678 * width(),
-            0.127 * height(),
-            0.864 * width(),
-            0.786 * height());
-    } else {
-        greenRect = QRectF(
-        0.0678 * width(),
-        (0.786 * (100 - percent_) / 100. + 0.127)* height(),
-        0.864 * width(),
-        0.786 * percent_ / 100. * height());
+            0.786 * percent_ / 100. * height());
+        }
+        painter_.fillRect(greenRect, QBrush(QColor(0, 255, 0)));
+        painter_.setPen(QPen(QColor(0, 0, 0), 20));
+        painter_.setFont(QFont("Times new roman", 20));
+        QFont f("Arial", 26, QFont::Bold);
+        painter_.setFont(f);
+        QLabel label(QString::number(percent_) + " %");
+        label.setFont(f);
+        painter_.drawText((width() -
+            label.fontMetrics().boundingRect(label.text()).width()) / 2,
+            (height() + 13) / 2, QString::number(percent_) + " %");
     }
-    painter_.fillRect(greenRect, QBrush(QColor(0, 255, 0)));
     painter_.drawPixmap(QRect(0, 0, width(), height()), *batteryPixmap);
-    painter_.setPen(QPen(QColor(0, 0, 0), 20));
-    painter_.setFont(QFont("Times new roman", 20));
-    QFont f("Arial", 26, QFont::Bold);
-    painter_.setFont(f);
-    QLabel label(QString::number(percent_) + " %");
-    label.setFont(f);
-    painter_.drawText((width() -
-        label.fontMetrics().boundingRect(label.text()).width()) / 2,
-        (height() + 13) / 2, QString::number(percent_) + " %");
 }
 
 void BatterySlider::slotSetValue(int percent)
 {
     percent_ = percent;
+    repaint();
+}
+
+void BatterySlider::slotSetActive(bool isActive_)
+{
+    isActive = isActive_;
     repaint();
 }

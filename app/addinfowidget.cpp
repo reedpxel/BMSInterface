@@ -45,11 +45,19 @@ QString AddInfoWidget::QByteArrayToDate(const QByteArray &array)
     return res;
 }
 
+void AddInfoWidget::uncheckRadioButton(QRadioButton* radioButton)
+{
+    radioButton->setChecked(true);
+    radioButton->setAutoExclusive(false);
+    radioButton->setChecked(false);
+    radioButton->setAutoExclusive(true);
+}
+
 AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     parser_(qobject_cast<MainWindow*>(parent)->getReader()),
-    expectedRegisterSizes({29, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    expectedRegisterSizes({29, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 0, 0, 0, 22}),
+        2, 2, 2, 2, 2, 1, 1, 1, 22}),
     dataSetters({
         [this](const std::vector<QByteArray>& data_)
         {
@@ -183,12 +191,12 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         [this](const std::vector<QByteArray>& data_)
         {
             ui->lineEdit_0x2a->setText(QString::number(getUInt16InArray(
-                data_[28], 0) / 100., 'f', 3));
+                data_[28], 0) / 1000., 'f', 3));
         }, // 0x2a
         [this](const std::vector<QByteArray>& data_)
         {
             ui->lineEdit_0x2b->setText(QString::number(getUInt16InArray(
-                data_[29], 0) / 1000.));
+                data_[29], 0) / 1000., 'f', 2));
         }, // 0x2b
         [this](const std::vector<QByteArray>& data_)
         {
@@ -456,6 +464,230 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
                 data_[49], 20)));
         } // 0xaa
     }),
+    dataCleaners({
+        [this]()
+        {
+            ui->lineEdit_0x03->setText("");
+        }, // 0x03
+        [this]()
+        {
+            ui->lineEdit_0x05->setText("");
+        }, // 0x05
+        [this]()
+        {
+            ui->lineEdit_0x10->setText("");
+        }, // 0x10
+        [this]()
+        {
+            ui->lineEdit_0x11->setText("");
+        }, // 0x11
+        [this]()
+        {
+            ui->lineEdit_0x12->setText("");
+        }, // 0x12
+        [this]()
+        {
+            ui->lineEdit_0x13->setText("");
+        }, // 0x13
+        [this]()
+        {
+            ui->lineEdit_0x14->setText("");
+        }, // 0x14
+        [this]()
+        {
+            ui->lineEdit_0x15->setText("");
+        }, // 0x15
+        [this]()
+        {
+            ui->lineEdit_0x16->setText("");
+        }, // 0x16
+        [this]()
+        {
+            ui->lineEdit_0x17->setText("");
+        }, // 0x17
+        [this]()
+        {
+            ui->lineEdit_0x18->setText("");
+        }, // 0x18
+        [this]()
+        {
+            ui->lineEdit_0x19->setText("");
+        }, // 0x19
+        [this]()
+        {
+            ui->lineEdit_0x1a->setText("");
+        }, // 0x1a
+        [this]()
+        {
+            ui->lineEdit_0x1b->setText("");
+        }, // 0x1b
+        [this]()
+        {
+            ui->lineEdit_0x1c->setText("");
+        }, // 0x1c
+        [this]()
+        {
+            ui->lineEdit_0x1d->setText("");
+        }, // 0x1d
+        [this]()
+        {
+            ui->lineEdit_0x1e->setText("");
+        }, // 0x1e
+        [this]()
+        {
+            ui->lineEdit_0x1f->setText("");
+        }, // 0x1f
+        [this]()
+        {
+            ui->lineEdit_0x20->setText("");
+        }, // 0x20
+        [this]()
+        {
+            ui->lineEdit_0x21->setText("");
+        }, // 0x21
+        [this]()
+        {
+            ui->lineEdit_0x22->setText("");
+        }, // 0x22
+        [this]()
+        {
+            ui->lineEdit_0x23->setText("");
+        }, // 0x23
+        [this]()
+        {
+            ui->lineEdit_0x24->setText("");
+        }, // 0x24
+        [this]()
+        {
+            ui->lineEdit_0x25->setText("");
+        }, // 0x25
+        [this]()
+        {
+            ui->lineEdit_0x26->setText("");
+        }, // 0x26
+        [this]()
+        {
+            ui->lineEdit_0x27->setText("");
+        }, // 0x27
+        [this]()
+        {
+            ui->lineEdit_0x28->setText("");
+        }, // 0x28
+        [this]()
+        {
+            ui->lineEdit_0x29->setText("");
+        }, // 0x29
+        [this]()
+        {
+            ui->lineEdit_0x2a->setText("");
+        }, // 0x2a
+        [this]()
+        {
+            ui->lineEdit_0x2b->setText("");
+        }, // 0x2b
+        [this]()
+        {
+            ui->lineEdit_0x2c->setText("");
+        }, // 0x2c
+        [this]()
+        {
+        // thermoresistors state - TO DO
+        }, // 0x2e
+        [this]()
+        {
+            ui->lineEdit_0x32->setText("");
+        }, // 0x32
+        [this]()
+        {
+            ui->lineEdit_0x33->setText("");
+        }, // 0x33
+        [this]()
+        {
+            ui->lineEdit_0x34->setText("");
+        }, // 0x34
+        [this]()
+        {
+            ui->lineEdit_0x35->setText("");
+        }, // 0x35
+        [this]()
+        {
+            ui->lineEdit_0x36->setText("");
+        }, // 0x36
+        [this]()
+        {
+            ui->lineEdit_0x37->setText("");
+        }, // 0x37
+        [this]()
+        {
+            uncheckRadioButton(ui->radioButton_0x38_07);
+            uncheckRadioButton(ui->radioButton_0x38_02100);
+            uncheckRadioButton(ui->radioButton_0x38_0430);
+            uncheckRadioButton(ui->radioButton_0x38_032100);
+            uncheckRadioButton(ui->radioButton_0x38_06540);
+        }, // 0x38
+        [this]()
+        {
+            uncheckRadioButton(ui->radioButton_0x39_0760);
+            uncheckRadioButton(ui->radioButton_0x39_0540);
+            ui->lineEdit_0x39_1->setText("");
+        }, // 0x39
+        [this]()
+        {
+            ui->lineEdit_0x3a_0->setText("");
+            ui->lineEdit_0x3a_1->setText("");
+        }, // 0x3a
+        [this]()
+        {
+            ui->lineEdit_0x3b_0->setText("");
+            ui->lineEdit_0x3b_1->setText("");
+        }, // 0x3b
+        [this]()
+        {
+            ui->lineEdit_0x3c_0->setText("");
+            ui->lineEdit_0x3c_1->setText("");
+        }, // 0x3c
+        [this]()
+        {
+            ui->lineEdit_0x3d_0->setText("");
+            ui->lineEdit_0x3d_1->setText("");
+        }, // 0x3d
+        [this]()
+        {
+            ui->lineEdit_0x3e_0->setText("");
+            ui->lineEdit_0x3e_1->setText("");
+        }, // 0x3e
+        [this]()
+        {
+            ui->lineEdit_0x3f_0->setText("");
+            ui->lineEdit_0x3f_1->setText("");
+        }, // 0x3f
+        [this]()
+        {
+            ui->lineEdit_0xa0->setText("");
+        }, // 0xa0
+        [this]()
+        {
+            ui->lineEdit_0xa1->setText("");
+        }, // 0xa1
+        [this]()
+        {
+            ui->lineEdit_0xa2->setText("");
+        }, // 0xa2
+        [this]()
+        {
+            ui->label_0xaa_0->setText("");
+            ui->label_0xaa_1->setText("");
+            ui->label_0xaa_2->setText("");
+            ui->label_0xaa_3->setText("");
+            ui->label_0xaa_4->setText("");
+            ui->label_0xaa_5->setText("");
+            ui->label_0xaa_6->setText("");
+            ui->label_0xaa_7->setText("");
+            ui->label_0xaa_8->setText("");
+            ui->label_0xaa_9->setText("");
+            ui->label_0xaa_10->setText("");
+        }
+    }),
     ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
@@ -470,7 +702,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
 }
 
-AddInfoParser *AddInfoWidget::getParser() { return &parser_; }
+AddInfoParser* AddInfoWidget::getParser() { return &parser_; }
 
 AddInfoWidget::~AddInfoWidget() { delete ui; }
 
@@ -482,6 +714,7 @@ void AddInfoWidget::slotShowDataOnGUI(const std::vector<QByteArray>& data_)
         if (data_[i].size() < expectedRegisterSizes[i])
         {
             unreadRegisters.push_back(i);
+            dataCleaners[i]();
         } else {
             std::invoke(dataSetters[i], data_);
         }
@@ -489,13 +722,19 @@ void AddInfoWidget::slotShowDataOnGUI(const std::vector<QByteArray>& data_)
     if (!unreadRegisters.empty())
     {
     // TO DO: чтобы выводило названия данных, а не номера регистров
-        QString msg = "The following registers were failed to read: ";
-        for (int i = 0; i < unreadRegisters.size() - 1; ++i)
+        QString msg;
+        if (unreadRegisters.size() == expectedRegisterSizes.size())
         {
-            msg += "0x" + QString::number(unreadRegisters[i], 16) + ", ";
+            msg = "No reply from BMS got";
+        } else {
+            msg = "The following registers were failed to read: ";
+            for (int i = 0; i < unreadRegisters.size() - 1; ++i)
+            {
+                msg += "0x" + QString::number(unreadRegisters[i], 16) + ", ";
+            }
+            msg += "0x" + QString::number(unreadRegisters.back(), 16);
         }
-        msg += "0x" + QString::number(unreadRegisters.back(), 16);
-        QMessageBox::information(this, "Unread registers", msg);
+        QMessageBox::information(this, "Reading result", msg);
     }
     ui->updateButton->setEnabled(true);
 }

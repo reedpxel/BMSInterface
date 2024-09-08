@@ -55,6 +55,10 @@ void MainWindow::drawConnectedWindow()
     connect(addInfoWidget->getParser(),
         SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
         SLOT(slotSetStatusBarMessage(const QByteArray&)));
+    // handling absense of BMS
+    connect(&reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
+    connect(&reader, &COMPortReader::sgnNoBMS,
+        [this]() { statusBar()->showMessage("No reply from BMS"); });
 }
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
@@ -139,6 +143,9 @@ void MainWindow::slotDataGot(const QByteArray& arr)
 void MainWindow::slotAddInfoReadBegun()
 {
     addInfoReadingProgress = new QProgressBar(ui->statusBar);
+    addInfoReadingProgress->setStyleSheet("QProgressBar{text-align : middle;}"
+        " QProgressBar::chunk{background-color : #00ff00;}");
+    addInfoReadingProgress->setMaximumSize(200, 20);
     ui->statusBar->addPermanentWidget(addInfoReadingProgress);
     addInfoReadingProgress->setRange(0, addInfoWidget->getParser()->
         getAmountOfQueries());

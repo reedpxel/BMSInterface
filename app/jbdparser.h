@@ -11,13 +11,14 @@ class JBDParser
     uint16_t getCrc(const QByteArray& array); // returns the CRC that must be
     // according to BMS protocol, not the CRC that actually is in the array
 public:
-    inline uint16_t twoBytesToUInt(const uint8_t* high);
+    inline uint16_t twoBytesToUInt(const char* high);
     QByteArray getMessageReadRegister(uint8_t register_);
     QByteArray getMessageWriteRegister(uint8_t register_,
         const std::vector<uint8_t>& data_);
-    bool messageIsViable(const QByteArray& message);
+    bool messageIsViable(const QByteArray& message,
+        uint8_t* errorNumber = nullptr);
     QByteArray getUsefulData(const QByteArray& message);
-    inline uint8_t getRegister(const QByteArray& message);
+    uint8_t getRegister(const QByteArray& message);
 };
 
 #endif // JBDPARSER_H

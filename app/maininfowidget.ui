@@ -93,35 +93,35 @@
          <item>
           <widget class="QLabel" name="totalVoltageLabel">
            <property name="text">
-            <string>50.00</string>
+            <string/>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="currentLabel">
            <property name="text">
-            <string>10.00</string>
+            <string/>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="currentCapacityLabel">
            <property name="text">
-            <string>30</string>
+            <string/>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="maxCapacityLabel">
            <property name="text">
-            <string>50</string>
+            <string/>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QLabel" name="cyclesLabel">
            <property name="text">
-            <string>1000</string>
+            <string/>
            </property>
           </widget>
          </item>
@@ -667,7 +667,7 @@
        <item>
         <widget class="QLabel" name="differenceLabel">
          <property name="text">
-          <string>0.000 V</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -700,7 +700,7 @@
            <item>
             <widget class="QLabel" name="FETChargeLabel">
              <property name="text">
-              <string>Opened</string>
+              <string/>
              </property>
             </widget>
            </item>
@@ -718,7 +718,7 @@
            <item>
             <widget class="QLabel" name="FETDischargeLabel">
              <property name="text">
-              <string>Opened</string>
+              <string/>
              </property>
             </widget>
            </item>

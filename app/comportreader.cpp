@@ -21,6 +21,7 @@ void COMPortReader::openPort(const QString& portName_)
 COMPortReader::COMPortReader() : QObject(nullptr),
     port(new QSerialPort),
     modeIsAutomatic(true),
+    lastQueryAnswered(false),
     writeTimer(new QTimer),
     timerId(startTimer(1000)),
     isConnected(false),
@@ -75,6 +76,7 @@ void COMPortReader::slotReadyReadAutomatic()
 {
     QTest::qWait(MAIN_INFO_AUTOMATIC_DELAY);
     QByteArray ba = port->readAll();
+    lastQueryAnswered = true;
     emit sgnDataGotAutomatic(ba);
 }
 
@@ -82,6 +84,7 @@ void COMPortReader::slotReadyReadManual()
 {
     QTest::qWait(100);
     QByteArray ba = port->readAll();
+    lastQueryAnswered = true;
     emit sgnDataGotManual(ba);
 }
 
@@ -97,6 +100,8 @@ void COMPortReader::slotNoAnswer()
 
 void COMPortReader::slotWriteAutomatic()
 {
+    if (!lastQueryAnswered) emit sgnNoBMS();
+    lastQueryAnswered = false;
     QByteArray& msg = writeMsgFlag ? msgToSend03 : msgToSend04;
     writeMsgFlag = writeMsgFlag ? false : true;
     port->write(msg);
@@ -125,6 +130,8 @@ void COMPortReader::slotSetManualMode()
 
 void COMPortReader::slotWriteManually(const QByteArray& message)
 {
+    if (!lastQueryAnswered) emit sgnNoBMS();
+    lastQueryAnswered = false;
     port->write(message);
 }
 

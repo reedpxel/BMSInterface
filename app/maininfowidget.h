@@ -12,16 +12,18 @@ class MainInfoWidget : public QWidget
 {
 Q_OBJECT
     BatterySlider* batterySlider;
+    bool isActive;
 
 public:
-    explicit MainInfoWidget(QWidget *parent = nullptr);
+    explicit MainInfoWidget(QWidget* parent = nullptr);
     virtual void resizeEvent(QResizeEvent*);
     ~MainInfoWidget();
 
 private:
-    Ui::MainInfoWidget *ui;
+    Ui::MainInfoWidget* ui;
 public slots:
     void slotDataReceived(const MainInfo&);
+    void slotNoAnswer();
 };
 
 #endif // MAININFO_H

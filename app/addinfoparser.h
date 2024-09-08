@@ -8,8 +8,12 @@
 #include <QByteArray>
 #include "comportreader.h"
 #include "maininfowidget.h"
+#include "jbdparser.h"
 
-class AddInfoParser : public QObject
+#define TIMEOUTS_LIMIT 7
+#define TIMER_INTERVAL 300
+
+class AddInfoParser : public QObject, public JBDParser
 {
 Q_OBJECT
     COMPortReader* reader;
@@ -19,17 +23,11 @@ Q_OBJECT
     std::vector<QByteArray> registersContent;
     unsigned currentQuery;
     unsigned attempt;
+    unsigned timeouts;
+    int timerId;
 
-    void setCrc(uint8_t* begin, uint8_t* end, uint8_t* crc);
-    uint16_t getCrc(const QByteArray& array); // returns the CRC that must be
-    // according to BMS protocol, not the CRC that actually is in the array
-    QByteArray getMessageReadRegister(uint8_t register_);
-    QByteArray getMessageWriteRegister(uint8_t register_,
-        std::vector<uint8_t> data);
-    bool messageIsViable(const QByteArray& array);
-    QByteArray getMessageUsefulData(const QByteArray& array);
-    inline uint8_t getRegister(const QByteArray& array);
-    inline uint16_t twoBytesToUInt(uint8_t high, uint8_t low);
+    virtual void timerEvent(QTimerEvent*);
+
 signals:
     void sgnUncheckedMessageGot(const QByteArray&);
     void sgnSetAutomaticMode();

@@ -2,14 +2,14 @@
 #include "ui_maininfowidget.h"
 
 MainInfoWidget::MainInfoWidget(QWidget *parent) : QWidget(parent),
-    ui(new Ui::MainInfoWidget)
+    isActive(false), ui(new Ui::MainInfoWidget)
 {
     ui->setupUi(this);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
     batterySlider->resize(ui->batterySliderWidget->width() - 10,
         ui->batterySliderWidget->height() - 10);
-    ui->tempsTable->setColumnCount(2);
-    ui->linesVoltageTable->setColumnCount(2);
+    ui->tempsTable->setFocusPolicy(Qt::NoFocus);
+    ui->linesVoltageTable->setFocusPolicy(Qt::NoFocus);
 }
 
 void MainInfoWidget::resizeEvent(QResizeEvent*)
@@ -54,6 +54,7 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
     ui->cyclesLabel->setText(QString::number(mainInfo.cycles));
 
     // battery slider
+    batterySlider->slotSetActive(true);
     batterySlider->slotSetValue(mainInfo.capacityInPercents);
 
     // temperatures
@@ -113,5 +114,35 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
                 QString::number(mainInfo.linesVoltage[i] / 1000., 'f', 3));
         }
     }
-    ui->differenceLabel->setText(QString::number(mainInfo.diff / 1000.));
+    ui->differenceLabel->setText(QString::number(mainInfo.diff / 1000.,
+        'f', 3));
+}
+
+void MainInfoWidget::slotNoAnswer()
+{
+    batterySlider->slotSetActive(false);
+    ui->linesBalanceLabel->setText("");
+    ui->FETChargeLabel->setText("");
+    ui->FETDischargeLabel->setText("");
+    ui->totalVoltageLabel->setText("");
+    ui->currentLabel->setText("");
+    ui->currentCapacityLabel->setText("");
+    ui->maxCapacityLabel->setText("");
+    ui->cyclesLabel->setText("");
+    ui->tempsTable->setRowCount(0);
+    ui->lineOvervoltageChB->setChecked(false);
+    ui->lineUndervoltageChB->setChecked(false);
+    ui->packOvervoltageChB->setChecked(false);
+    ui->packUndervoltageChB->setChecked(false);
+    ui->chargeOverheatingChB->setChecked(false);
+    ui->chargeUnderheatingChB->setChecked(false);
+    ui->dischargeOverheatingChB->setChecked(false);
+    ui->dischargeUnderheatingChB->setChecked(false);
+    ui->chargeOvercurrentChB->setChecked(false);
+    ui->dischargeOvercurrentChB->setChecked(false);
+    ui->shortCurcuitChB->setChecked(false);
+    ui->frontendChB->setChecked(false);
+    ui->ConfigChB->setChecked(false);
+    ui->linesVoltageTable->setRowCount(0);
+    ui->differenceLabel->setText("");
 }
