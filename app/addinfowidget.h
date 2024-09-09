@@ -34,7 +34,6 @@ public:
     AddInfoParser* getParser();
     ~AddInfoWidget();
 
-
 public slots:
     void slotShowDataOnGUI(const std::vector<QByteArray>& data_);
 };

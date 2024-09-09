@@ -29,8 +29,6 @@ void MainWindow::drawConnectedWindow()
     ui = new Ui::MainWindow;
     ui->setupUi(this);
     MainInfoWidget* mainInfoWidget = new MainInfoWidget;
-    connect(&parser, SIGNAL(sgnDataReceived(const MainInfo&)),
-        mainInfoWidget, SLOT(slotDataReceived(const MainInfo&)));
     QGridLayout* mainInfoLayout = new QGridLayout;
     mainInfoLayout->addWidget(mainInfoWidget);
     ui->mainInfoTab->setLayout(mainInfoLayout);
@@ -47,10 +45,12 @@ void MainWindow::drawConnectedWindow()
         SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
     QObject::connect(addInfoWidget->getParser(),
         SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
-    QObject::connect(&parser, SIGNAL(sgnDataReceived(const MainInfo&)),
-        logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
+    // main info widget
+    connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
+        mainInfoWidget->getParser(), SLOT(slotParseMessage(const QByteArray&)));
     // connections that send messages to status bar
-    connect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+    connect(mainInfoWidget->getParser(),
+        SIGNAL(sgnMessageGot(const QByteArray&)),
         SLOT(slotSetStatusBarMessage(const QByteArray&)));
     connect(addInfoWidget->getParser(),
         SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
@@ -58,28 +58,20 @@ void MainWindow::drawConnectedWindow()
     // handling absense of BMS
     connect(&reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
     connect(&reader, &COMPortReader::sgnNoBMS,
-        [this]() { statusBar()->showMessage("No reply from BMS"); });
+        [this](){ statusBar()->showMessage("No reply from BMS"); });
+    // sending main data to logsWidget
+    connect(mainInfoWidget->getParser(),
+        SIGNAL(sgnData03Updated(const MainInfo&)),
+        logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
 }
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
-    ui(nullptr), /*tray(new QSystemTrayIcon(this)), trayMenu(new QMenu(this)),*/
-    reader(), parser(),
+MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent),
+    ui(nullptr),
+    reader(),
     noConnectionPixmap(nullptr),
     noConnectionWidget(nullptr),
     addInfoWidget(nullptr)
 {
-    // tray->setIcon(QPixmap(":/new/images/logo.png"));
-
-    // QAction* actionHide = new QAction("Hide window", this);
-    // QAction* actionStopLoggingAndQuit = new QAction("Stop logging and quit");
-    // connect(actionHide, SIGNAL(triggered()), SLOT(hide()));
-    // connect(actionStopLoggingAndQuit, SIGNAL(triggered()),
-    //     SLOT(slotStopLoggingAndQuit()));
-    // trayMenu->addAction(actionHide);
-    // trayMenu->addAction(actionStopLoggingAndQuit);
-    // tray->setContextMenu(trayMenu);
-    // tray->show();
-
     noConnectionPixmap = new QPixmap(
         QPixmap(":/new/images/no-connection.png").scaled(QSize(300, 300),
         Qt::KeepAspectRatio, Qt::SmoothTransformation));
@@ -97,8 +89,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
         SLOT(slotPortDidNotOpen(const QString&)));
     connect(&reader, SIGNAL(sgnPortClosed()),
         SLOT(slotPortClosed()));
-    connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
-        SLOT(slotDataGot(const QByteArray&)));
 }
 
 MainWindow::~MainWindow()
@@ -108,8 +98,6 @@ MainWindow::~MainWindow()
 }
 
 COMPortReader* MainWindow::getReader() { return &reader; }
-
-// void MainWindow::closeEvent(QCloseEvent*) { slotCloseOrHide(); }
 
 void MainWindow::slotNoPortsFound(size_t attempt)
 {
@@ -132,12 +120,6 @@ void MainWindow::slotPortClosed()
 {
     drawNoConnectionWindow();
     statusBar()->showMessage("No reply from device, COM port closed", 2000);
-}
-
-void MainWindow::slotDataGot(const QByteArray& arr)
-{
-    emit sgnMessageGot(arr);
-    parser.parseMessage(arr);
 }
 
 void MainWindow::slotAddInfoReadBegun()
@@ -171,13 +153,15 @@ void MainWindow::on_actionShow_received_data_triggered(bool checked)
 {
     if (checked)
     {
-        connect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+        connect(mainInfoWidget->getParser(),
+            SIGNAL(sgnMessageGot(const QByteArray&)),
             SLOT(slotSetStatusBarMessage(const QByteArray&)));
         connect(addInfoWidget->getParser(),
             SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
             SLOT(slotSetStatusBarMessage(const QByteArray&)));
     } else {
-        QObject::disconnect(this, SIGNAL(sgnMessageGot(const QByteArray&)),
+        QObject::disconnect(mainInfoWidget->getParser(),
+            SIGNAL(sgnMessageGot(const QByteArray&)),
             this, SLOT(slotSetStatusBarMessage(const QByteArray&)));
         QObject::disconnect(addInfoWidget->getParser(),
             SIGNAL(sgnUncheckedMessageGot(const QByteArray&)), this,

@@ -7,7 +7,6 @@
 #include <QDebug>
 #include <QByteArray>
 #include "comportreader.h"
-#include "maininfowidget.h"
 #include "jbdparser.h"
 
 #define TIMEOUTS_LIMIT 7

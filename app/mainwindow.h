@@ -6,6 +6,7 @@
 #include "comportreader.h"
 #include "logswidget.h"
 
+class MainInfoWidget;
 class AddInfoWidget;
 
 QT_BEGIN_NAMESPACE
@@ -25,8 +26,6 @@ Q_OBJECT
 
     COMPortReader reader;
 
-    MainInfoParser parser; // объект этого класса должен быть в MainInfoWidget
-    // ^ TO DO !!!
     QWidget* noConnectionWidget;
     QPixmap* noConnectionPixmap;
     QProgressBar* addInfoReadingProgress;
@@ -34,7 +33,7 @@ Q_OBJECT
     void drawNoConnectionWindow();
     void drawConnectedWindow();
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
     COMPortReader* getReader();
 signals:
@@ -44,7 +43,6 @@ public slots:
     void slotPortOpened(const QString&);
     void slotPortDidNotOpen(const QString&);
     void slotPortClosed();
-    void slotDataGot(const QByteArray&);
     void slotAddInfoReadBegun();
     void slotAddInfoUpdated(unsigned currentValue);
     void slotAddInfoReadEnded();

@@ -9,15 +9,18 @@
     5 - wrong crc
 */
 
-MainInfoParser::MainInfoParser() : QObject(),
+MainInfoParser::MainInfoParser(COMPortReader* reader) : QObject(),
+    reader(reader),
     mainInfo({1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         std::vector<int>(3, 0), std::vector<int>(13, 0), 0}) {}
 
-void MainInfoParser::parseMessage(const QByteArray &message)
+void MainInfoParser::slotParseMessage(const QByteArray &message)
 {
+    emit sgnMessageGot(message);
     uint8_t error_ = 0x00;
     if (!messageIsViable(message, &error_))
     {
+        // TO DO: display error code on status bar
         mainInfo.error = error_;
         return;
     }
@@ -41,8 +44,8 @@ void MainInfoParser::parseMainInfoMessage(const QByteArray& message)
     mainInfo.linesBalanceStatus = twoBytesToUInt(message.data() + 16);
     mainInfo._BMSErrors = twoBytesToUInt(message.data() + 20);
     mainInfo.capacityInPercents = message[23];
-    mainInfo.chargeFETState = message[24] & 0b10 ? true : false;
-    mainInfo.dischargeFETState = message[24] & 0b1 ? true : false;
+    mainInfo.chargeFETState = message[24] & 0b1 ? true : false;
+    mainInfo.dischargeFETState = message[24] & 0b10 ? true : false;
     mainInfo.lines = message[25];
     if (mainInfo.lines > 32) mainInfo.lines = 32;
     mainInfo.temperatures.resize(message[26]);
@@ -52,7 +55,7 @@ void MainInfoParser::parseMainInfoMessage(const QByteArray& message)
         mainInfo.temperatures[i] = twoBytesToUInt(message.data() + 27 + 2 * i) -
             2731;
     }
-    emit sgnDataReceived(mainInfo);
+    emit sgnData03Updated(mainInfo);
 }
 
 void MainInfoParser::parseLineVoltageMessage(const QByteArray& message)
@@ -67,6 +70,6 @@ void MainInfoParser::parseLineVoltageMessage(const QByteArray& message)
         if (mainInfo.linesVoltage[i] < _min) _min = mainInfo.linesVoltage[i];
     }
     mainInfo.diff = _max - _min;
-    emit sgnDataReceived(mainInfo);
+    emit sgnData04Updated(mainInfo);
 }
 

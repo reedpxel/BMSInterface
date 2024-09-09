@@ -705,7 +705,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="FETChargeButton">
              <property name="text">
               <string>Change</string>
              </property>
@@ -723,7 +723,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="FETDischargeButton">
              <property name="text">
               <string>Change</string>
              </property>

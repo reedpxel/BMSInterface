@@ -1,15 +1,22 @@
 #include "maininfowidget.h"
 #include "ui_maininfowidget.h"
 
-MainInfoWidget::MainInfoWidget(QWidget *parent) : QWidget(parent),
+MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
+    parser_(qobject_cast<MainWindow*>(parent)->getReader()),
     isActive(false), ui(new Ui::MainInfoWidget)
 {
     ui->setupUi(this);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
+    // why - 10 ?
     batterySlider->resize(ui->batterySliderWidget->width() - 10,
         ui->batterySliderWidget->height() - 10);
     ui->tempsTable->setFocusPolicy(Qt::NoFocus);
     ui->linesVoltageTable->setFocusPolicy(Qt::NoFocus);
+
+    QObject::connect(&parser_, SIGNAL(sgnData03Updated(const MainInfo&)),
+        SLOT(slotData03Updated(const MainInfo&)));
+    QObject::connect(&parser_, SIGNAL(sgnData04Updated(const MainInfo&)),
+        SLOT(slotData04Updated(const MainInfo&)));
 }
 
 void MainInfoWidget::resizeEvent(QResizeEvent*)
@@ -19,7 +26,9 @@ void MainInfoWidget::resizeEvent(QResizeEvent*)
 
 MainInfoWidget::~MainInfoWidget() { delete ui; }
 
-void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
+MainInfoParser* MainInfoWidget::getParser() { return &parser_; }
+
+void MainInfoWidget::slotDataUpdated(const MainInfo& mainInfo)
 {
     // lines' balance status
     if (!mainInfo.linesBalanceStatus)
@@ -118,6 +127,108 @@ void MainInfoWidget::slotDataReceived(const MainInfo& mainInfo)
         'f', 3));
 }
 
+void MainInfoWidget::slotData03Updated(const MainInfo& mainInfo)
+{
+    // lines' balance status
+    if (!mainInfo.linesBalanceStatus)
+    {
+        ui->linesBalanceLabel->setText(QString(mainInfo.lines, '+'));
+    } else {
+        QString str(mainInfo.lines, '+');
+        for (int i = 0; i < mainInfo.lines; ++i)
+        {
+            if (mainInfo.linesBalanceStatus & (0b1 << (mainInfo.lines - i)))
+            {
+                str[i] = '-';
+            }
+        }
+        ui->linesBalanceLabel->setText(str);
+    }
+
+    // FET status
+    if (mainInfo.chargeFETState) ui->FETChargeLabel->setText("Opened");
+    else ui->FETChargeLabel->setText("Closed");
+    if (mainInfo.dischargeFETState) ui->FETDischargeLabel->setText("Opened");
+    else ui->FETDischargeLabel->setText("Closed");
+
+    // voltage, current, capacity, cycles
+    ui->totalVoltageLabel->setText(
+        QString::number(mainInfo.totalVoltage / 100., 'f', 2));
+    ui->currentLabel->setText(QString::number(mainInfo.current / 100., 'f', 2));
+    ui->currentCapacityLabel->setText(
+        QString::number(mainInfo.currentCapacity / 100., 'f', 2));
+    ui->maxCapacityLabel->setText(
+        QString::number(mainInfo.maximumCapacity / 100., 'f', 2));
+    ui->cyclesLabel->setText(QString::number(mainInfo.cycles));
+
+    // battery slider
+    batterySlider->slotSetActive(true);
+    batterySlider->slotSetValue(mainInfo.capacityInPercents);
+
+    // temperatures
+    if (ui->tempsTable->rowCount() != mainInfo.temperatures.size())
+    {
+        ui->tempsTable->setRowCount(mainInfo.temperatures.size());
+        for (int i = 0; i < mainInfo.temperatures.size(); ++i)
+        {
+            QTableWidgetItem* item0 = new QTableWidgetItem;
+            item0->setText("Thermoresistor " + QString::number(i + 1) + ":");
+            ui->tempsTable->setItem(i, 0, item0);
+            QTableWidgetItem* item1 = new QTableWidgetItem;
+            ui->tempsTable->setItem(i, 1, item1);
+            item1->setText(QString::number(mainInfo.temperatures[i], 'f', 1));
+        }
+    } else {
+        for (int i = 0; i < mainInfo.temperatures.size(); ++i)
+        {
+            ui->tempsTable->item(i, 1)->setText(
+                QString::number(mainInfo.temperatures[i] / 10., 'f', 1));
+        }
+    }
+
+    // errors
+    ui->lineOvervoltageChB->setChecked(mainInfo._BMSErrors & 1);
+    ui->lineUndervoltageChB->setChecked(mainInfo._BMSErrors & (1 << 1));
+    ui->packOvervoltageChB->setChecked(mainInfo._BMSErrors & (1 << 2));
+    ui->packUndervoltageChB->setChecked(mainInfo._BMSErrors & (1 << 3));
+    ui->chargeOverheatingChB->setChecked(mainInfo._BMSErrors & (1 << 4));
+    ui->chargeUnderheatingChB->setChecked(mainInfo._BMSErrors & (1 << 5));
+    ui->dischargeOverheatingChB->setChecked(mainInfo._BMSErrors & (1 << 6));
+    ui->dischargeUnderheatingChB->setChecked(mainInfo._BMSErrors & (1 << 7));
+    ui->chargeOvercurrentChB->setChecked(mainInfo._BMSErrors & (1 << 8));
+    ui->dischargeOvercurrentChB->setChecked(mainInfo._BMSErrors & (1 << 9));
+    ui->shortCurcuitChB->setChecked(mainInfo._BMSErrors & (1 << 10));
+    ui->frontendChB->setChecked(mainInfo._BMSErrors & (1 << 11));
+    ui->ConfigChB->setChecked(mainInfo._BMSErrors & (1 << 12));
+}
+
+void MainInfoWidget::slotData04Updated(const MainInfo& mainInfo)
+{
+    // lines' voltages, difference
+    if (ui->linesVoltageTable->rowCount() != mainInfo.lines)
+    {
+        ui->linesVoltageTable->setRowCount(mainInfo.lines);
+        for (int i = 0; i < mainInfo.lines; ++i)
+        {
+            QTableWidgetItem* item0 = new QTableWidgetItem;
+            item0->setText(QString::number(i + 1));
+            ui->linesVoltageTable->setItem(i, 0, item0);
+            QTableWidgetItem* item1 = new QTableWidgetItem;
+            ui->linesVoltageTable->setItem(i, 1, item1);
+            item1->setText(QString::number(
+                mainInfo.linesVoltage[i] / 1000., 'f', 3));
+        }
+    } else {
+        for (int i = 0; i < mainInfo.lines; ++i)
+        {
+            ui->linesVoltageTable->item(i, 1)->setText(
+                QString::number(mainInfo.linesVoltage[i] / 1000., 'f', 3));
+        }
+    }
+    ui->differenceLabel->setText(QString::number(mainInfo.diff / 1000.,
+        'f', 3));
+}
+
 void MainInfoWidget::slotNoAnswer()
 {
     batterySlider->slotSetActive(false);
@@ -146,3 +257,15 @@ void MainInfoWidget::slotNoAnswer()
     ui->linesVoltageTable->setRowCount(0);
     ui->differenceLabel->setText("");
 }
+
+void MainInfoWidget::on_FETChargeButton_clicked()
+{
+    // ???
+}
+
+
+void MainInfoWidget::on_FETDischargeButton_clicked()
+{
+    // ???
+}
+
