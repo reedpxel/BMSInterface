@@ -28,26 +28,29 @@ void MainWindow::drawConnectedWindow()
     noConnectionWidget = nullptr;
     ui = new Ui::MainWindow;
     ui->setupUi(this);
-    MainInfoWidget* mainInfoWidget = new MainInfoWidget;
+
+    mainInfoWidget = new MainInfoWidget(this);
     QGridLayout* mainInfoLayout = new QGridLayout;
     mainInfoLayout->addWidget(mainInfoWidget);
     ui->mainInfoTab->setLayout(mainInfoLayout);
+
     addInfoWidget = new AddInfoWidget(this);
     ui->scrollArea->setWidget(addInfoWidget);
+
     logsWidget = new LogsWidget(this);
     QGridLayout* logsLayout = new QGridLayout;
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
-    QObject::connect(addInfoWidget->getParser(),
-        SIGNAL(sgnReadingBegun()),
-        SLOT(slotAddInfoReadBegun()));
-    QObject::connect(addInfoWidget->getParser(),
-        SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
-    QObject::connect(addInfoWidget->getParser(),
-        SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
+    // QObject::connect(addInfoWidget->getParser(),
+    //     SIGNAL(sgnReadingBegun()),
+    //     SLOT(slotAddInfoReadBegun()));
+    // QObject::connect(addInfoWidget->getParser(),
+    //     SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
+    // QObject::connect(addInfoWidget->getParser(),
+    //     SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
     // main info widget
-    connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
-        mainInfoWidget->getParser(), SLOT(slotParseMessage(const QByteArray&)));
+    // connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
+    //     mainInfoWidget->getParser(), SLOT(slotParseMessage(const QByteArray&)));
     // connections that send messages to status bar
     connect(mainInfoWidget->getParser(),
         SIGNAL(sgnMessageGot(const QByteArray&)),
@@ -56,21 +59,24 @@ void MainWindow::drawConnectedWindow()
         SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
         SLOT(slotSetStatusBarMessage(const QByteArray&)));
     // handling absense of BMS
-    connect(&reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
-    connect(&reader, &COMPortReader::sgnNoBMS,
-        [this](){ statusBar()->showMessage("No reply from BMS"); });
+    // connect(&reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
+    // connect(&reader, &COMPortReader::sgnNoBMS,
+    //     [this](){ statusBar()->showMessage("No reply from BMS"); });
     // sending main data to logsWidget
-    connect(mainInfoWidget->getParser(),
-        SIGNAL(sgnData03Updated(const MainInfo&)),
-        logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
+    // connect(mainInfoWidget->getParser(),
+    //     SIGNAL(sgnData03Updated(const MainInfo&)),
+    //     logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
 }
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent),
+MainWindow::MainWindow(COMPortReader* reader) : QMainWindow(nullptr),
     ui(nullptr),
-    reader(),
+    mainInfoWidget(nullptr),
+    addInfoWidget(nullptr),
+    logsWidget(nullptr),
+    reader(reader),
     noConnectionPixmap(nullptr),
     noConnectionWidget(nullptr),
-    addInfoWidget(nullptr)
+    addInfoReadingProgress(nullptr)
 {
     noConnectionPixmap = new QPixmap(
         QPixmap(":/new/images/no-connection.png").scaled(QSize(300, 300),
@@ -81,23 +87,24 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent),
     drawNoConnectionWindow();
 
     statusBar()->showMessage("");
-    connect(&reader, SIGNAL(sgnNoPortsFound(size_t)),
+    connect(reader, SIGNAL(sgnNoPortsFound(size_t)),
         SLOT(slotNoPortsFound(size_t)));
-    connect(&reader, SIGNAL(sgnPortOpened(const QString&)),
+    connect(reader, SIGNAL(sgnPortOpened(const QString&)),
         SLOT(slotPortOpened(const QString&)));
-    connect(&reader, SIGNAL(sgnPortDidNotOpen(const QString&)),
+    connect(reader, SIGNAL(sgnPortDidNotOpen(const QString&)),
         SLOT(slotPortDidNotOpen(const QString&)));
-    connect(&reader, SIGNAL(sgnPortClosed()),
+    connect(reader, SIGNAL(sgnPortClosed()),
         SLOT(slotPortClosed()));
 }
 
 MainWindow::~MainWindow()
 {
+    delete reader;
     delete ui;
     delete noConnectionWidget;
 }
 
-COMPortReader* MainWindow::getReader() { return &reader; }
+COMPortReader* MainWindow::getReader() { return reader; }
 
 void MainWindow::slotNoPortsFound(size_t attempt)
 {

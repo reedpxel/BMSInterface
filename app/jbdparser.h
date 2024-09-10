@@ -5,12 +5,11 @@
 #include <vector>
 #include <QByteArray>
 
-class JBDParser
+struct JBDParser
 {
     void setCrc(uint8_t* begin, uint8_t* end, uint8_t* crc);
     uint16_t getCrc(const QByteArray& array); // returns the CRC that must be
     // according to BMS protocol, not the CRC that actually is in the array
-public:
     uint16_t twoBytesToUInt(const char* high);
     QByteArray getMessageReadRegister(uint8_t register_);
     QByteArray getMessageWriteRegister(uint8_t register_,

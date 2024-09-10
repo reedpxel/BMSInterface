@@ -24,7 +24,7 @@ Q_OBJECT
     AddInfoWidget* addInfoWidget;
     LogsWidget* logsWidget;
 
-    COMPortReader reader;
+    COMPortReader* reader;
 
     QWidget* noConnectionWidget;
     QPixmap* noConnectionPixmap;
@@ -33,7 +33,7 @@ Q_OBJECT
     void drawNoConnectionWindow();
     void drawConnectedWindow();
 public:
-    MainWindow(QWidget* parent = nullptr);
+    MainWindow(COMPortReader* reader);
     ~MainWindow();
     COMPortReader* getReader();
 signals:

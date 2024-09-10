@@ -4,6 +4,7 @@
 #include "maininfoparser.h"
 #include "mainwindow.h"
 #include <QWidget>
+#include <future>
 
 namespace Ui {
 class MainInfoWidget;
@@ -30,9 +31,6 @@ public slots:
     void slotData03Updated(const MainInfo&);
     void slotData04Updated(const MainInfo&);
     void slotNoAnswer();
-private slots:
-    void on_FETChargeButton_clicked();
-    void on_FETDischargeButton_clicked();
 };
 
 #endif // MAININFO_H

@@ -6,6 +6,8 @@
 #include <climits>
 #include "jbdparser.h"
 #include "comportreader.h"
+#include <future>
+#include <QMessageBox>
 
 struct MainInfo
 {
@@ -29,15 +31,18 @@ struct MainInfo
 class MainInfoParser : public QObject, public JBDParser
 {
 Q_OBJECT
-    COMPortReader* reader;
-    MainInfo mainInfo;
-
     void parseMainInfoMessage(const QByteArray& message);
     void parseLineVoltageMessage(const QByteArray& message);
 public:
+    COMPortReader* reader;
+    MainInfo mainInfo;
     MainInfoParser(COMPortReader* reader);
 public slots:
     void slotParseMessage(const QByteArray& message);
+    void slotParseFETStateMessage(const QByteArray&);
+    void slotOnFETChargeButtonClicked();
+    void slotOnFETDischargeButtonClicked();
+
 signals:
     void sgnMessageGot(const QByteArray&);
     void sgnData03Updated(const MainInfo&);

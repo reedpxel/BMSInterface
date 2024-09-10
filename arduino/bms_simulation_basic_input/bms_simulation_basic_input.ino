@@ -238,11 +238,12 @@ void loop()
     } else { // writing
       Serial.println("writing");
       output_buffer[0] = 0xdd;
-      output_buffer[1] = register_;
+      output_buffer[1] = input_buffer[2];
       output_buffer[6] = 0x77;
-      switch (register_)
+      switch (input_buffer[2])
       {
         case 0xe1:
+          Serial.println("puk");
           registers_values_buffer[24] = input_buffer[5];
         break;
       }
@@ -269,7 +270,6 @@ void loop()
     registers_values_buffer[11];
   registers_values_buffer[23] = static_cast<uint8_t>(
     static_cast<float>(currentCharge) * 100 / fullCharge);
-  Serial.print(registers_values_buffer[23], HEX);
   for (int i = 0; i < 3; ++i)
   {
     randomize_uint16_t(registers_values_buffer + 27 + 2 * i, 2);

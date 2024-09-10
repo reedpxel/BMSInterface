@@ -12,9 +12,15 @@
 MainInfoParser::MainInfoParser(COMPortReader* reader) : QObject(),
     reader(reader),
     mainInfo({1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        std::vector<int>(3, 0), std::vector<int>(13, 0), 0}) {}
+        std::vector<int>(3, 0), std::vector<int>(13, 0), 0})
+{
+    QObject::connect(reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
+        SLOT(slotParseMessage(const QByteArray&)));
+    QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
+        SLOT(slotParseFETStateMessage(const QByteArray&)));
+}
 
-void MainInfoParser::slotParseMessage(const QByteArray &message)
+void MainInfoParser::slotParseMessage(const QByteArray& message)
 {
     emit sgnMessageGot(message);
     uint8_t error_ = 0x00;
@@ -30,6 +36,70 @@ void MainInfoParser::slotParseMessage(const QByteArray &message)
     } else if (getRegister(message) == 0x04) {
         parseLineVoltageMessage(message);
     }
+}
+
+void MainInfoParser::slotParseFETStateMessage(const QByteArray& message)
+{
+    if (message.isEmpty())
+    {
+        QMessageBox::warning(nullptr, "Error", "No reply from BMS");
+    }
+    if (messageIsViable(message) && getRegister(message) == 0xe1) return;
+    QMessageBox::warning(nullptr, "Error", "The query to change FET state was "
+        "sent, but the reply contents error");
+}
+
+void MainInfoParser::slotOnFETChargeButtonClicked()
+{
+    uint8_t state = 0;
+    if (!mainInfo.chargeFETState)
+    {
+        state |= 0b1;
+    }
+    if (mainInfo.dischargeFETState)
+    {
+        state |= 0b10;
+    }
+    QByteArray ba = getMessageWriteRegister(0xe1, {0x00, state});
+    reader->slotWriteQueries({ba});
+    // std::vector<QByteArray> reply = reader->getReplies({ba});
+    // for (auto ba_ : reply)
+    // {
+    //     std::cout << "Recieved array for MainInfoParser: ";
+    //     for (int i = 0; i < ba_.size(); ++i)
+    //     {
+    //         std::cout << std::hex << static_cast<uint16_t>(
+    //             ba_[i] & 0xff) << ' ';
+    //     }
+    //     std::cout << '\n';
+    // }
+}
+
+void MainInfoParser::slotOnFETDischargeButtonClicked()
+{
+    uint8_t state = 0;
+    if (mainInfo.chargeFETState)
+    {
+        state |= 0b1;
+    }
+    if (!mainInfo.dischargeFETState)
+    {
+        state |= 0b10;
+    }
+    QByteArray ba = getMessageWriteRegister(0xe1, {0x00, state});
+    reader->slotWriteQueries({ba});
+    // /*QByteArray ba = */getMessageWriteRegister(0xe1, {0x00, state});
+    // std::vector<QByteArray> reply = reader->getReplies({ba});
+    // for (auto ba_ : reply)
+    // {
+    //     std::cout << "Recieved array for MainInfoParser: ";
+    //     for (int i = 0; i < ba_.size(); ++i)
+    //     {
+    //         std::cout << std::hex << static_cast<uint16_t>(
+    //             ba_[i] & 0xff) << ' ';
+    //     }
+    //     std::cout << '\n';
+    // }
 }
 
 void MainInfoParser::parseMainInfoMessage(const QByteArray& message)

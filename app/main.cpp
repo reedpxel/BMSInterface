@@ -1,12 +1,12 @@
 #include "mainwindow.h"
+#include "comportreader.h"
 #include <QApplication>
-#include "maininfowidget.h"
-#include "addinfowidget.h"
 
 int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
-    MainWindow* mw = new MainWindow;
+    COMPortReader* reader = new COMPortReader;
+    MainWindow* mw = new MainWindow(reader);
     mw->show();
     return app.exec();
 }

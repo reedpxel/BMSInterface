@@ -691,15 +691,15 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
-    QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
-        SIGNAL(sgnSetManualMode()));
-    QObject::connect(ui->updateButton, &QPushButton::clicked,
-        ui->updateButton, [this](){ ui->updateButton->setEnabled(false); });
-    QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
-        SIGNAL(sgnReadingBegun()));
-    QObject::connect(&parser_,
-        SIGNAL(sgnSendDataToGUI(const std::vector<QByteArray>&)),
-        SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
+    // QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
+    //     SIGNAL(sgnSetManualMode()));
+    // QObject::connect(ui->updateButton, &QPushButton::clicked,
+    //     ui->updateButton, [this](){ ui->updateButton->setEnabled(false); });
+    // QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
+    //     SIGNAL(sgnReadingBegun()));
+    // QObject::connect(&parser_,
+    //     SIGNAL(sgnSendDataToGUI(const std::vector<QByteArray>&)),
+    //     SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
 }
 
 AddInfoParser* AddInfoWidget::getParser() { return &parser_; }

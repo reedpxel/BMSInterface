@@ -40,16 +40,16 @@ AddInfoParser::AddInfoParser(COMPortReader* reader) :
             querySequence.push_back(getMessageReadRegister(registersToRead[i]));
         }
     }
-    QObject::connect(this, SIGNAL(sgnSetManualMode()), reader,
-        SLOT(slotSetManualMode()));
-    QObject::connect(reader, SIGNAL(sgnManualModeIsSet()),
-        SLOT(slotSendNextMessageOrExit()));
-    QObject::connect(this, SIGNAL(sgnSend(const QByteArray&)), reader,
-        SLOT(slotWriteManually(const QByteArray&)));
-    QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
-        SLOT(slotParseMessage(const QByteArray&)));
-    QObject::connect(this, SIGNAL(sgnSetAutomaticMode()), reader,
-        SLOT(slotSetAutomaticMode()));
+    // QObject::connect(this, SIGNAL(sgnSetManualMode()), reader,
+    //     SLOT(slotSetManualMode()));
+    // QObject::connect(reader, SIGNAL(sgnManualModeIsSet()),
+    //     SLOT(slotSendNextMessageOrExit()));
+    // QObject::connect(this, SIGNAL(sgnSend(const QByteArray&)), reader,
+    //     SLOT(slotWriteManually(const QByteArray&)));
+    // QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
+    //     SLOT(slotParseMessage(const QByteArray&)));
+    // QObject::connect(this, SIGNAL(sgnSetAutomaticMode()), reader,
+    //     SLOT(slotSetAutomaticMode()));
 }
 
 size_t AddInfoParser::getAmountOfQueries() { return registersToRead.size(); }

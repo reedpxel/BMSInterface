@@ -12,11 +12,16 @@ MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
         ui->batterySliderWidget->height() - 10);
     ui->tempsTable->setFocusPolicy(Qt::NoFocus);
     ui->linesVoltageTable->setFocusPolicy(Qt::NoFocus);
-
+    // main data setters
     QObject::connect(&parser_, SIGNAL(sgnData03Updated(const MainInfo&)),
         SLOT(slotData03Updated(const MainInfo&)));
     QObject::connect(&parser_, SIGNAL(sgnData04Updated(const MainInfo&)),
         SLOT(slotData04Updated(const MainInfo&)));
+    // change FET state buttons
+    connect(ui->FETChargeButton, SIGNAL(clicked()),
+        &parser_, SLOT(slotOnFETChargeButtonClicked()));
+    connect(ui->FETDischargeButton, SIGNAL(clicked()),
+        &parser_, SLOT(slotOnFETDischargeButtonClicked()));
 }
 
 void MainInfoWidget::resizeEvent(QResizeEvent*)
@@ -257,15 +262,3 @@ void MainInfoWidget::slotNoAnswer()
     ui->linesVoltageTable->setRowCount(0);
     ui->differenceLabel->setText("");
 }
-
-void MainInfoWidget::on_FETChargeButton_clicked()
-{
-    // ???
-}
-
-
-void MainInfoWidget::on_FETDischargeButton_clicked()
-{
-    // ???
-}
-
