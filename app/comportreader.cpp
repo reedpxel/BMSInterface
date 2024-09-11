@@ -76,6 +76,7 @@ void COMPortReader::slotReadyReadAutomatic()
     QTest::qWait(MAIN_INFO_AUTOMATIC_DELAY);
     QByteArray ba = port->readAll();
     lastQueryAnswered = true;
+    waitingReply = false;
     emit sgnDataGotAutomatic(ba);
     std::cout << "Received automatically: ";
     for (int i = 0; i < ba.size(); ++i)
@@ -90,8 +91,8 @@ void COMPortReader::slotReadyReadManual()
     QTest::qWait(100);
     QByteArray ba = port->readAll();
     lastQueryAnswered = true;
-    emit sgnDataGotManual(ba);
     waitingReply = false;
+    emit sgnDataGotManual(ba);
     std::cout << "Recieved manually: ";
     for (int i = 0; i < ba.size(); ++i)
     {
@@ -139,14 +140,19 @@ void COMPortReader::slotSetAutomaticMode()
 void COMPortReader::slotSetManualMode()
 {
     writeTimer->stop();
-    if (waitingReply)
-    {
-        // waiting until reply got
-        QSignalSpy spy(this, SIGNAL(sgnDataGotAutomatic(const QByteArray&)));
-        spy.wait(SET_MANUAL_MODE_WAITING_LIMIT);
-    }
     QObject::disconnect(port, SIGNAL(readyRead()), this,
         SLOT(slotReadyReadAutomatic()));
+    if (waitingReply)
+    {
+        if (!port->bytesAvailable())
+        {
+            // waiting until reply got
+            std::cout << "waiting\n";
+            QSignalSpy spy(port, SIGNAL(readyRead()));
+            spy.wait(SET_MANUAL_MODE_WAITING_LIMIT);
+        }
+        slotReadyReadAutomatic();
+    }
     QObject::connect(port, SIGNAL(readyRead()),
         SLOT(slotReadyReadManual()));
     modeIsAutomatic = false;
@@ -157,6 +163,7 @@ void COMPortReader::slotWriteManually(const QByteArray& message)
 {
     if (!lastQueryAnswered) emit sgnNoBMS();
     lastQueryAnswered = false;
+    waitingReply = true;
     port->write(message);
     std::cout << "Sent manually: ";
     for (int i = 0; i < message.size(); ++i)
@@ -170,7 +177,7 @@ void COMPortReader::slotWriteManually(const QByteArray& message)
 void COMPortReader::slotWriteQueries(const std::vector<QByteArray>& queries)
 {
     slotSetManualMode();
-    port->readAll();
+    std::cout << "!!!queries size: " << queries.size() << "@@@\n";
     for (auto& query : queries)
     {
         slotWriteManually(query);
@@ -178,8 +185,6 @@ void COMPortReader::slotWriteQueries(const std::vector<QByteArray>& queries)
         spy.wait(MAIN_INFO_MANUAL_DELAY);
         // TO DO: check if the incoming byte is 0x77, chech CRC and consider a
         // message to be got if crc is correct
-        QTest::qWait(70);
-        slotReadyReadManual();
     }
     slotSetAutomaticMode();
 }

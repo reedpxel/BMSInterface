@@ -41,27 +41,27 @@ void MainWindow::drawConnectedWindow()
     QGridLayout* logsLayout = new QGridLayout;
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
-    // QObject::connect(addInfoWidget->getParser(),
-    //     SIGNAL(sgnReadingBegun()),
-    //     SLOT(slotAddInfoReadBegun()));
-    // QObject::connect(addInfoWidget->getParser(),
-    //     SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
-    // QObject::connect(addInfoWidget->getParser(),
-    //     SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
+    // drawing a progress bar while reading of add data proceeds
+    QObject::connect(addInfoWidget->getParser(), SIGNAL(sgnReadingBegun()),
+        SLOT(slotAddInfoReadBegun()));
+    QObject::connect(addInfoWidget->getParser(),
+        SIGNAL(sgnReadingUpdate(unsigned)), SLOT(slotAddInfoUpdated(unsigned)));
+    QObject::connect(addInfoWidget->getParser(),
+        SIGNAL(sgnReadingEnded()), SLOT(slotAddInfoReadEnded()));
     // main info widget
     // connect(&reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
     //     mainInfoWidget->getParser(), SLOT(slotParseMessage(const QByteArray&)));
+
     // connections that send messages to status bar
-    connect(mainInfoWidget->getParser(),
-        SIGNAL(sgnMessageGot(const QByteArray&)),
+    connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
+        SLOT(slotSetStatusBarMessage(QByteArray)));
+    connect(reader, SIGNAL(sgnDataGotAutomatic(QByteArray)),
         SLOT(slotSetStatusBarMessage(const QByteArray&)));
-    connect(addInfoWidget->getParser(),
-        SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
-        SLOT(slotSetStatusBarMessage(const QByteArray&)));
+
     // handling absense of BMS
-    // connect(&reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
-    // connect(&reader, &COMPortReader::sgnNoBMS,
-    //     [this](){ statusBar()->showMessage("No reply from BMS"); });
+    connect(reader, SIGNAL(sgnNoBMS()), mainInfoWidget, SLOT(slotNoAnswer()));
+    connect(reader, &COMPortReader::sgnNoBMS,
+        [this](){ statusBar()->showMessage("No reply from BMS"); });
     // sending main data to logsWidget
     // connect(mainInfoWidget->getParser(),
     //     SIGNAL(sgnData03Updated(const MainInfo&)),
@@ -160,18 +160,15 @@ void MainWindow::on_actionShow_received_data_triggered(bool checked)
 {
     if (checked)
     {
-        connect(mainInfoWidget->getParser(),
-            SIGNAL(sgnMessageGot(const QByteArray&)),
-            SLOT(slotSetStatusBarMessage(const QByteArray&)));
-        connect(addInfoWidget->getParser(),
-            SIGNAL(sgnUncheckedMessageGot(const QByteArray&)),
+        connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
+            SLOT(slotSetStatusBarMessage(QByteArray)));
+        connect(reader, SIGNAL(sgnDataGotAutomatic(QByteArray)),
             SLOT(slotSetStatusBarMessage(const QByteArray&)));
     } else {
-        QObject::disconnect(mainInfoWidget->getParser(),
-            SIGNAL(sgnMessageGot(const QByteArray&)),
+        QObject::disconnect(reader,
+            SIGNAL(sgnDataGotManual(const QByteArray&)),
+            this, SLOT(slotSetStatusBarMessage(QByteArray)));
+        QObject::disconnect(reader, SIGNAL(sgnDataGotAutomatic(QByteArray)),
             this, SLOT(slotSetStatusBarMessage(const QByteArray&)));
-        QObject::disconnect(addInfoWidget->getParser(),
-            SIGNAL(sgnUncheckedMessageGot(const QByteArray&)), this,
-            SLOT(slotSetStatusBarMessage(const QByteArray&)));
     }
 }

@@ -10,10 +10,10 @@
 
 #define MAIN_INFO_TIMER_STEP 400
 #define MAIN_INFO_AUTOMATIC_DELAY 150
-#define MAIN_INFO_MANUAL_DELAY 100
+#define MAIN_INFO_MANUAL_DELAY 200
 #define NO_PORTS_TIMER_DELAY 1000
 #define MANUAL_READ_DELAY 25
-#define SET_MANUAL_MODE_WAITING_LIMIT 200
+#define SET_MANUAL_MODE_WAITING_LIMIT 400
 // COMPortReader works in 2 mods: manual and automatic
 // In automatic mode it sends 0x03 and 0x04 queries every
 // MAIN_INFO_TIMER_STEP ms.

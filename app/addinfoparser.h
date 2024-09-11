@@ -43,6 +43,7 @@ public:
 public slots:
     void slotParseMessage(const QByteArray&);
     void slotSendNextMessageOrExit();
+    void slotPrepareReadAddData();
 };
 
 #endif // ADDINFOPARSER_H

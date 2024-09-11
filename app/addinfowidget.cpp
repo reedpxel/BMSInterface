@@ -57,7 +57,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     parser_(qobject_cast<MainWindow*>(parent)->getReader()),
     expectedRegisterSizes({29, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 1, 1, 1, 22}),
+        2, 2, 2, 2, 2, 1, 1, 1, 22, 2}),
     dataSetters({
         [this](const std::vector<QByteArray>& data_)
         {
@@ -205,7 +205,17 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         }, // 0x2c
         [this](const std::vector<QByteArray>& data_)
         {
-        // thermoresistors state - TO DO
+            if (data_[0].size() < expectedRegisterSizes[0]) return;
+            uint16_t value = data_[31][0] << 8 + data_[31][1];
+            uint8_t amountOfThermoresistors = data_[0][22];
+            QString res;
+            for (unsigned i = 0; i < amountOfThermoresistors; ++i)
+            {
+                if ((value >> i) & 0b1) res += "On ";
+                else res += "Off ";
+            }
+            ui->thermStateLabel->setText(res);
+            ui->changeThermStateButton->setEnabled(true);
         }, // 0x2e
         [this](const std::vector<QByteArray>& data_)
         {
@@ -462,7 +472,24 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
                 data_[49], 18)));
             ui->label_0xaa_10->setText(QString::number(getUInt16InArray(
                 data_[49], 20)));
-        } // 0xaa
+        }, // 0xaa
+        [this](const std::vector<QByteArray>& data_)
+        {
+            switch (data_[50][1])
+            {
+                case 0:
+                    ui->radioButton_0xe2_0->setChecked(true);
+                break;
+                case 1:
+                    ui->radioButton_0xe2_1->setChecked(true);
+                break;
+                case 2:
+                    ui->radioButton_0xe2_2->setChecked(true);
+                break;
+                case 3:
+                    ui->radioButton_0xe2_3->setChecked(true);
+            }
+        }
     }),
     dataCleaners({
         [this]()
@@ -591,7 +618,8 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         }, // 0x2c
         [this]()
         {
-        // thermoresistors state - TO DO
+            ui->thermStateLabel->setText("");
+            ui->changeThermStateButton->setEnabled(false);
         }, // 0x2e
         [this]()
         {
@@ -686,20 +714,24 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
             ui->label_0xaa_8->setText("");
             ui->label_0xaa_9->setText("");
             ui->label_0xaa_10->setText("");
-        }
+        }, // 0xaa
+        [this]()
+        {
+            uncheckRadioButton(ui->radioButton_0xe2_0);
+        } // 0xe2
     }),
     ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
-    // QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
-    //     SIGNAL(sgnSetManualMode()));
-    // QObject::connect(ui->updateButton, &QPushButton::clicked,
-    //     ui->updateButton, [this](){ ui->updateButton->setEnabled(false); });
-    // QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
-    //     SIGNAL(sgnReadingBegun()));
-    // QObject::connect(&parser_,
-    //     SIGNAL(sgnSendDataToGUI(const std::vector<QByteArray>&)),
-    //     SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
+    QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
+        SLOT(slotPrepareReadAddData()));
+    QObject::connect(ui->updateButton, &QPushButton::clicked,
+        ui->updateButton, [this](){ ui->updateButton->setEnabled(false); });
+    QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
+        SIGNAL(sgnReadingBegun()));
+    QObject::connect(&parser_,
+        SIGNAL(sgnSendDataToGUI(const std::vector<QByteArray>&)),
+        SLOT(slotShowDataOnGUI(const std::vector<QByteArray>&)));
 }
 
 AddInfoParser* AddInfoWidget::getParser() { return &parser_; }

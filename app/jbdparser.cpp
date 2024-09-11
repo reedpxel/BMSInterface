@@ -91,7 +91,7 @@ bool JBDParser::messageIsViable(const QByteArray& message, uint8_t* errorNumber)
         std::cout << "actual CRC: " <<
             twoBytesToUInt(message.data() + message.size() - 3) <<
             " counted CRC: " << getCrc(message) << '\n';
-        *errorNumber = 5;
+        if (errorNumber) *errorNumber = 5;
         return false;
     }
     return true;

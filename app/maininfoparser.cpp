@@ -16,8 +16,9 @@ MainInfoParser::MainInfoParser(COMPortReader* reader) : QObject(),
 {
     QObject::connect(reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
         SLOT(slotParseMessage(const QByteArray&)));
-    QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
-        SLOT(slotParseFETStateMessage(const QByteArray&)));
+    // TO DO: connect these manually, only when FET buttons clicked
+    // QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
+    //     SLOT(slotParseFETStateMessage(const QByteArray&)));
 }
 
 void MainInfoParser::slotParseMessage(const QByteArray& message)
@@ -43,6 +44,7 @@ void MainInfoParser::slotParseFETStateMessage(const QByteArray& message)
     if (message.isEmpty())
     {
         QMessageBox::warning(nullptr, "Error", "No reply from BMS");
+        return;
     }
     if (messageIsViable(message) && getRegister(message) == 0xe1) return;
     QMessageBox::warning(nullptr, "Error", "The query to change FET state was "

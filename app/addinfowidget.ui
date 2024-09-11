@@ -2418,14 +2418,14 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_63">
+           <widget class="QLabel" name="thermStateLabel">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
              </font>
             </property>
             <property name="text">
-             <string> On On On</string>
+             <string/>
             </property>
            </widget>
           </item>
@@ -2547,7 +2547,10 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="changeThermStateButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <pointsize>8</pointsize>
@@ -2668,28 +2671,28 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_43">
            <item>
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="radioButton_0xe2_0">
              <property name="text">
               <string>Enable all lines</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="radioButton_0xe2_2">
              <property name="text">
               <string>Disable odd lines</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_3">
+            <widget class="QRadioButton" name="radioButton_0xe2_1">
              <property name="text">
               <string>Disable even lines</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton_4">
+            <widget class="QRadioButton" name="radioButton_0xe2_3">
              <property name="text">
               <string>Disable all lines</string>
              </property>
