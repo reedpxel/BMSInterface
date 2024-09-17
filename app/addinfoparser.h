@@ -40,6 +40,8 @@ signals:
 public:
     AddInfoParser(COMPortReader* reader);
     size_t getAmountOfQueries();
+    COMPortReader* getReader();
+    void setRegisterValue(uint8_t register_, const QByteArray& data_);
 public slots:
     void slotParseMessage(const QByteArray&);
     void slotSendNextMessageOrExit();

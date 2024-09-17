@@ -1,9 +1,12 @@
 #ifndef JBDPARSER_H
 #define JBDPARSER_H
 #include <iostream>
+#include <cmath>
 #include <cstdint>
 #include <vector>
 #include <QByteArray>
+#include <QString>
+#include <QDate>
 
 struct JBDParser
 {
@@ -18,6 +21,16 @@ struct JBDParser
         uint8_t* errorNumber = nullptr);
     QByteArray getUsefulData(const QByteArray& message);
     uint8_t getRegister(const QByteArray& message);
+    uint8_t getError(const QByteArray& message);
+
+    // TO DO: add error handling
+    QByteArray uint16_tToArray(const QString& str,
+        unsigned signsAfterComma = 0);
+    QByteArray QStringToJBDString(const QString& str);
+    QString JBDStringToQString(const QByteArray& array);
+    QByteArray temperatureToArray(const QString& str);
+    QString QByteArrayToDate(const QByteArray& array);
+    QByteArray dateToQByteArray(const QString& str);
 };
 
 #endif // JBDPARSER_H

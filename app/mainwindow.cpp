@@ -41,6 +41,7 @@ void MainWindow::drawConnectedWindow()
     QGridLayout* logsLayout = new QGridLayout;
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
+
     // drawing a progress bar while reading of add data proceeds
     QObject::connect(addInfoWidget->getParser(), SIGNAL(sgnReadingBegun()),
         SLOT(slotAddInfoReadBegun()));
@@ -63,9 +64,9 @@ void MainWindow::drawConnectedWindow()
     connect(reader, &COMPortReader::sgnNoBMS,
         [this](){ statusBar()->showMessage("No reply from BMS"); });
     // sending main data to logsWidget
-    // connect(mainInfoWidget->getParser(),
-    //     SIGNAL(sgnData03Updated(const MainInfo&)),
-    //     logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
+    connect(mainInfoWidget->getParser(),
+        SIGNAL(sgnData03Updated(const MainInfo&)),
+        logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
 }
 
 MainWindow::MainWindow(COMPortReader* reader) : QMainWindow(nullptr),
@@ -74,8 +75,8 @@ MainWindow::MainWindow(COMPortReader* reader) : QMainWindow(nullptr),
     addInfoWidget(nullptr),
     logsWidget(nullptr),
     reader(reader),
-    noConnectionPixmap(nullptr),
     noConnectionWidget(nullptr),
+    noConnectionPixmap(nullptr),
     addInfoReadingProgress(nullptr)
 {
     noConnectionPixmap = new QPixmap(

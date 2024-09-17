@@ -103,3 +103,64 @@ QByteArray JBDParser::getUsefulData(const QByteArray& message)
 }
 
 uint8_t JBDParser::getRegister(const QByteArray& message) { return message[1]; }
+
+uint8_t JBDParser::getError(const QByteArray& message) { return message[2]; }
+
+QByteArray JBDParser::uint16_tToArray(const QString& str,
+    unsigned signsAfterComma)
+{
+    uint16_t value =
+        static_cast<uint16_t>(ceil(str.toFloat() * pow(10, signsAfterComma)));
+    uint8_t data_[2] =
+        {static_cast<uint8_t>(value >> 8), static_cast<uint8_t>(value)};
+    return QByteArray(reinterpret_cast<char*>(data_), 2);
+}
+
+QByteArray JBDParser::QStringToJBDString(const QString& str)
+{
+    uint8_t data_[13];
+    data_[0] = str.size();
+    memcpy(data_ + 1, str.toStdString().data(), str.size());
+    return QByteArray(reinterpret_cast<char*>(data_), str.size() + 1);
+}
+
+QString JBDParser::JBDStringToQString(const QByteArray &array)
+{
+    if (array.isEmpty()) return QString();
+    const uint8_t* unsignedPointer =
+        reinterpret_cast<const uint8_t*>(array.data());
+    uint8_t sz = *unsignedPointer > 12 ? 12 : *unsignedPointer;
+    char str[14];
+    memcpy(str, array.data() + 1, sz);
+    str[sz] = '\0';
+    return QString(str);
+}
+
+QByteArray JBDParser::temperatureToArray(const QString& str)
+{
+    uint16_t value = ((str.toFloat() * 10) + 2731);
+    uint8_t data_[2] =
+        {static_cast<uint8_t>(value >> 8), static_cast<uint8_t>(value)};
+    return QByteArray(reinterpret_cast<char*>(data_), 2);
+}
+
+QString JBDParser::QByteArrayToDate(const QByteArray &array)
+{
+    uint16_t year = (array[0] >> 1) + 2000;
+    uint8_t month = array[1] >> 5;
+    month |= ((array[0] & 0b1) << 3);
+    uint8_t day = array[1] & 0b00011111;
+    QDate date(year, month, day);
+    return date.toString("dd.MM.yyyy");
+}
+
+QByteArray JBDParser::dateToQByteArray(const QString& str)
+{
+    QDate date = QDate::fromString(str, "dd.MM.yyyy");
+    uint8_t buffer[2] = {
+        static_cast<uint8_t>(((date.year() - 2000) << 1) & 0b11111110),
+        static_cast<uint8_t>(date.day() & 0b00011111)};
+    buffer[1] |= (date.month() << 5);
+    buffer[0] |= ((date.month() >> 3) & 0b1);
+    return QByteArray(reinterpret_cast<char*>(buffer), 2);
+}

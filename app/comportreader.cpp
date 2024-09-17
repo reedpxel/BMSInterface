@@ -38,7 +38,7 @@ COMPortReader::COMPortReader() : QObject(nullptr),
 
 COMPortReader::~COMPortReader()
 {
-    std::cout << "~COMPortReader()\n";
+    // std::cout << "~COMPortReader()\n";
     if (!isConnected)
     {
         port->close();
@@ -78,12 +78,12 @@ void COMPortReader::slotReadyReadAutomatic()
     lastQueryAnswered = true;
     waitingReply = false;
     emit sgnDataGotAutomatic(ba);
-    std::cout << "Received automatically: ";
-    for (int i = 0; i < ba.size(); ++i)
-    {
-        std::cout << std::hex << (static_cast<uint16_t>(ba[i]) & 0xff) << ' ';
-    }
-    std::cout << '\n';
+    // std::cout << "Received automatically: ";
+    // for (int i = 0; i < ba.size(); ++i)
+    // {
+    //     std::cout << std::hex << (static_cast<uint16_t>(ba[i]) & 0xff) << ' ';
+    // }
+    // std::cout << '\n';
 }
 
 void COMPortReader::slotReadyReadManual()
@@ -93,12 +93,12 @@ void COMPortReader::slotReadyReadManual()
     lastQueryAnswered = true;
     waitingReply = false;
     emit sgnDataGotManual(ba);
-    std::cout << "Recieved manually: ";
-    for (int i = 0; i < ba.size(); ++i)
-    {
-        std::cout << std::hex << (static_cast<uint16_t>(ba[i]) & 0xff) << ' ';
-    }
-    std::cout << '\n';
+    // std::cout << "Recieved manually: ";
+    // for (int i = 0; i < ba.size(); ++i)
+    // {
+    //     std::cout << std::hex << (static_cast<uint16_t>(ba[i]) & 0xff) << ' ';
+    // }
+    // std::cout << '\n';
 }
 
 void COMPortReader::slotNoAnswer()
@@ -119,12 +119,12 @@ void COMPortReader::slotWriteAutomatic()
     writeMsgFlag = writeMsgFlag ? false : true;
     waitingReply = true;
     port->write(msg);
-    std::cout << "Sent automatically: ";
-    for (int i = 0; i < msg.size(); ++i)
-    {
-        std::cout << std::hex << (static_cast<uint16_t>(msg[i]) & 0xff) << ' ';
-    }
-    std::cout << '\n';
+    // std::cout << "Sent automatically: ";
+    // for (int i = 0; i < msg.size(); ++i)
+    // {
+    //     std::cout << std::hex << (static_cast<uint16_t>(msg[i]) & 0xff) << ' ';
+    // }
+    // std::cout << '\n';
 }
 
 void COMPortReader::slotSetAutomaticMode()
@@ -147,7 +147,7 @@ void COMPortReader::slotSetManualMode()
         if (!port->bytesAvailable())
         {
             // waiting until reply got
-            std::cout << "waiting\n";
+            // std::cout << "waiting\n";
             QSignalSpy spy(port, SIGNAL(readyRead()));
             spy.wait(SET_MANUAL_MODE_WAITING_LIMIT);
         }
@@ -165,19 +165,19 @@ void COMPortReader::slotWriteManually(const QByteArray& message)
     lastQueryAnswered = false;
     waitingReply = true;
     port->write(message);
-    std::cout << "Sent manually: ";
-    for (int i = 0; i < message.size(); ++i)
-    {
-        std::cout << std::hex << (static_cast<uint16_t>(message[i]) & 0xff) <<
-            ' ';
-    }
-    std::cout << '\n';
+    // std::cout << "Sent manually: ";
+    // for (int i = 0; i < message.size(); ++i)
+    // {
+    //     std::cout << std::hex << (static_cast<uint16_t>(message[i]) & 0xff) <<
+    //         ' ';
+    // }
+    // std::cout << '\n';
 }
 
 void COMPortReader::slotWriteQueries(const std::vector<QByteArray>& queries)
 {
     slotSetManualMode();
-    std::cout << "!!!queries size: " << queries.size() << "@@@\n";
+    // std::cout << "!!!queries size: " << queries.size() << "@@@\n";
     for (auto& query : queries)
     {
         slotWriteManually(query);

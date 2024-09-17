@@ -50,6 +50,20 @@ AddInfoParser::AddInfoParser(COMPortReader* reader) :
 
 size_t AddInfoParser::getAmountOfQueries() { return registersToRead.size(); }
 
+COMPortReader* AddInfoParser::getReader() { return reader; }
+
+void AddInfoParser::setRegisterValue(uint8_t register_, const QByteArray &data_)
+{
+    std::cout << "data ";
+    for (unsigned i = 0; i < data_.size(); ++i)
+    {
+        std::cout << std::hex <<
+            (static_cast<uint16_t>(data_[i]) & 0xff) << ' ';
+    }
+    std::cout << "is sent to register " << (static_cast<uint16_t>(register_)
+        & 0xff) << '\n';
+}
+
 void AddInfoParser::slotParseMessage(const QByteArray& array)
 {
     killTimer(timerId);
