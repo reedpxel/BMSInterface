@@ -16,7 +16,6 @@ MainInfoParser::MainInfoParser(COMPortReader* reader) : QObject(),
 {
     QObject::connect(reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
         SLOT(slotParseMessage(const QByteArray&)));
-    // TO DO: connect these manually, only when FET buttons clicked
     // QObject::connect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
     //     SLOT(slotParseFETStateMessage(const QByteArray&)));
 }
@@ -54,32 +53,6 @@ void MainInfoParser::slotParseFETStateMessage(const QByteArray& message)
 void MainInfoParser::slotOnFETChargeButtonClicked()
 {
     uint8_t state = 0;
-    if (!mainInfo.chargeFETState)
-    {
-        state |= 0b1;
-    }
-    if (mainInfo.dischargeFETState)
-    {
-        state |= 0b10;
-    }
-    QByteArray ba = getMessageWriteRegister(0xe1, {0x00, state});
-    reader->slotWriteQueries({ba});
-    // std::vector<QByteArray> reply = reader->getReplies({ba});
-    // for (auto ba_ : reply)
-    // {
-    //     std::cout << "Recieved array for MainInfoParser: ";
-    //     for (int i = 0; i < ba_.size(); ++i)
-    //     {
-    //         std::cout << std::hex << static_cast<uint16_t>(
-    //             ba_[i] & 0xff) << ' ';
-    //     }
-    //     std::cout << '\n';
-    // }
-}
-
-void MainInfoParser::slotOnFETDischargeButtonClicked()
-{
-    uint8_t state = 0;
     if (mainInfo.chargeFETState)
     {
         state |= 0b1;
@@ -90,26 +63,28 @@ void MainInfoParser::slotOnFETDischargeButtonClicked()
     }
     QByteArray ba = getMessageWriteRegister(0xe1, {0x00, state});
     reader->slotWriteQueries({ba});
-    // /*QByteArray ba = */getMessageWriteRegister(0xe1, {0x00, state});
-    // std::vector<QByteArray> reply = reader->getReplies({ba});
-    // for (auto ba_ : reply)
-    // {
-    //     std::cout << "Recieved array for MainInfoParser: ";
-    //     for (int i = 0; i < ba_.size(); ++i)
-    //     {
-    //         std::cout << std::hex << static_cast<uint16_t>(
-    //             ba_[i] & 0xff) << ' ';
-    //     }
-    //     std::cout << '\n';
-    // }
+}
+
+void MainInfoParser::slotOnFETDischargeButtonClicked()
+{
+    uint8_t state = 0;
+    if (!mainInfo.chargeFETState)
+    {
+        state |= 0b1;
+    }
+    if (mainInfo.dischargeFETState)
+    {
+        state |= 0b10;
+    }
+    QByteArray ba = getMessageWriteRegister(0xe1, {0x00, state});
+    reader->slotWriteQueries({ba});
 }
 
 void MainInfoParser::parseMainInfoMessage(const QByteArray& message)
 {
     mainInfo.error = 0;
     mainInfo.totalVoltage = twoBytesToUInt(message.data() + 4);
-    // TO DO: current may be negative
-    mainInfo.current = twoBytesToUInt(message.data() + 6);
+    mainInfo.current = twoBytesToSignedInt(message.data() + 6);
     mainInfo.currentCapacity = twoBytesToUInt(message.data() + 8);
     mainInfo.maximumCapacity = twoBytesToUInt(message.data() + 10);
     mainInfo.cycles = twoBytesToUInt(message.data() + 12);

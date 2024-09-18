@@ -31,6 +31,13 @@ uint16_t JBDParser::twoBytesToUInt(const char* high)
     return res;
 }
 
+short JBDParser::twoBytesToSignedInt(const char* high)
+{
+    const uint8_t* pUHigh = reinterpret_cast<const uint8_t*>(high);
+    short res = (*pUHigh << 8) + *pUHigh;
+    return res;
+}
+
 QByteArray JBDParser::getMessageReadRegister(uint8_t register_)
 {
     uint8_t data[7] = {0xdd, 0xa5, 0x00, 0x00, 0x00, 0x00, 0x77};

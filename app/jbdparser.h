@@ -7,6 +7,7 @@
 #include <QByteArray>
 #include <QString>
 #include <QDate>
+#include <bitset>
 
 struct JBDParser
 {
@@ -14,6 +15,7 @@ struct JBDParser
     uint16_t getCrc(const QByteArray& array); // returns the CRC that must be
     // according to BMS protocol, not the CRC that actually is in the array
     uint16_t twoBytesToUInt(const char* high);
+    short twoBytesToSignedInt(const char* high);
     QByteArray getMessageReadRegister(uint8_t register_);
     QByteArray getMessageWriteRegister(uint8_t register_,
         const std::vector<uint8_t>& data_);

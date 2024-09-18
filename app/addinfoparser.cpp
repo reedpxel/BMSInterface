@@ -117,8 +117,8 @@ void AddInfoParser::slotSendNextMessageOrExit()
         currentQuery = 0;
         timeouts = 0; // to read additional data again
     } else {
-        emit sgnSend(querySequence[currentQuery]);
         timerId = startTimer(TIMER_INTERVAL);
+        emit sgnSend(querySequence[currentQuery]);
     }
 }
 

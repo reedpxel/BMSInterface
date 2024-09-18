@@ -1366,10 +1366,10 @@ void AddInfoWidget::slotOnFocusChanged(QWidget*, QWidget* now)
     if (newIndex < 0) return;
 
     onFocusSet[newIndex]();
-    std::cout << "buffer is set to ";
-    for (int j = 0; j < buffer_.size(); ++j)
-    {
-        std::cout << std::hex << static_cast<int>(buffer_[j]) << ' ';
-    }
-    std::cout << std::dec << '\n';
+    // std::cout << "buffer is set to ";
+    // for (int j = 0; j < buffer_.size(); ++j)
+    // {
+    //     std::cout << std::hex << static_cast<int>(buffer_[j]) << ' ';
+    // }
+    // std::cout << std::dec << '\n';
 }
