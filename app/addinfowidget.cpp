@@ -98,6 +98,21 @@ QString AddInfoWidget::setTextSoftwareVersion(const QByteArray& array)
     return QString(reinterpret_cast<const char*>(array.data()));
 }
 
+int AddInfoWidget::findEditableWidgetIndex(QWidget* widget)
+{
+    for (unsigned i = 0; i < editableRegistersObjects.size(); ++i)
+    {
+        if (widget == editableRegistersObjects[i]) return i;
+    }
+    return -1;
+}
+
+QWidget* AddInfoWidget::findEditableWidgetIndex(int index)
+{
+    if (index < 0 || index >= editableRegistersObjects.size()) return nullptr;
+    return editableRegistersObjects[index];
+}
+
 AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     parser_(qobject_cast<MainWindow*>(parent)->getReader()),
     expectedRegisterSizes({29, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
@@ -227,13 +242,13 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         }, // 0x27
         [this](const QByteArray& data_)
         {
-            ui->lineEdit_0x28->setText(QString::number(getUInt16InArray(
-                data_, 0) / 100., 'f', 2));
+            ui->lineEdit_0x28->setText(QString::number(
+                parser_.twoBytesToSignedInt(data_.data()) / 100., 'f', 2));
         }, // 0x28
         [this](const QByteArray& data_)
         {
-            ui->lineEdit_0x29->setText(QString::number(getUInt16InArray(
-                data_, 0) / 100., 'f', 2));
+            ui->lineEdit_0x29->setText(QString::number(
+                parser_.twoBytesToSignedInt(data_.data()) / 100., 'f', 2));
         }, // 0x29
         [this](const QByteArray& data_)
         {
@@ -1220,6 +1235,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     }),
     buffer_(),
     previousWidgetIndex(-1),
+    awaitedRegisterIndex(0),
     amountOfThermoresistors(0),
     amountOfThermoresistorsGot(false),
     ui(new Ui::AddInfoWidget)
@@ -1303,7 +1319,14 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     {
         QObject::connect(qobject_cast<QLineEdit*>(editableRegistersObjects[i]),
             &QLineEdit::returnPressed, onEnterPressed[i]);
+        QObject::connect(qobject_cast<QLineEdit*>(editableRegistersObjects[i]),
+            &QLineEdit::returnPressed, [this, i](){ awaitedRegisterIndex = i; });
     }
+    // updating GUI as data written in registers
+    connect(&parser_, SIGNAL(sgnWritingSuccess(const QByteArray&)),
+        SLOT(slotOnWritingSuccess(const QByteArray&)));
+    connect(&parser_, SIGNAL(sgnWritingError()),
+        SLOT(slotOnWritingError()));
 }
 
 AddInfoParser* AddInfoWidget::getParser() { return &parser_; }
@@ -1350,26 +1373,28 @@ void AddInfoWidget::slotOnFocusChanged(QWidget*, QWidget* now)
         std::invoke(setPreviousBuffer[previousWidgetIndex], buffer_);
     }
     // searching whether a newly focused widget is among those, with which
-    // data can be written in BMS
-    int64_t newIndex = -1;
-    for (size_t i = 0; i < editableRegistersObjects.size(); ++i)
-    {
-        if (now == editableRegistersObjects[i])
-        {
-            newIndex = i;
-            break;
-        }
-    }
-    // updating previousWidgetIndex
-    previousWidgetIndex = newIndex;
+    // data can be written in BMS and updating previousWidgetIndex
+    previousWidgetIndex = findEditableWidgetIndex(now);
     // if widget is not among writing to BMS, there is no need to do anything
-    if (newIndex < 0) return;
+    if (previousWidgetIndex < 0) return;
 
-    onFocusSet[newIndex]();
-    // std::cout << "buffer is set to ";
-    // for (int j = 0; j < buffer_.size(); ++j)
-    // {
-    //     std::cout << std::hex << static_cast<int>(buffer_[j]) << ' ';
-    // }
-    // std::cout << std::dec << '\n';
+    onFocusSet[previousWidgetIndex]();
+}
+
+void AddInfoWidget::slotOnWritingSuccess(const QByteArray& array)
+{
+    std::cout << "new buffer: ";
+    for (int i = 0; i < array.size(); ++i)
+    {
+        std::cout << std::hex << (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
+    }
+    std::cout << '\n';
+    std::invoke(setPreviousBuffer[awaitedRegisterIndex], array);
+}
+
+void AddInfoWidget::slotOnWritingError()
+{
+    std::invoke(setPreviousBuffer[awaitedRegisterIndex], buffer_);
+    QMessageBox::warning(this, "Error", "Writing error");
+
 }

@@ -7,7 +7,6 @@
 #include <QByteArray>
 #include <QString>
 #include <QDate>
-#include <bitset>
 
 struct JBDParser
 {

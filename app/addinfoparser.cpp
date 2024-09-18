@@ -24,10 +24,14 @@ AddInfoParser::AddInfoParser(COMPortReader* reader) :
     registersContent(registersToRead.size() - 2),
     currentQuery(0),
     attempt(1),
-    timeouts(0)
+    timeouts(0),
+    registersSequence({0x00, 0x00, 0x01, 0x00}),
+    querySequenceWriteRegister(),
+    recievedRegisterContent(),
+    registerToWriteIn(0)
 {
     querySequence.reserve(registersToRead.size());
-    for (int i = 0; i < registersToRead.size(); ++i)
+    for (unsigned i = 0; i < registersToRead.size(); ++i)
     {
         if (!i)
         {
@@ -52,73 +56,125 @@ size_t AddInfoParser::getAmountOfQueries() { return registersToRead.size(); }
 
 COMPortReader* AddInfoParser::getReader() { return reader; }
 
-void AddInfoParser::setRegisterValue(uint8_t register_, const QByteArray &data_)
+void AddInfoParser::setRegisterValue(uint8_t register_, const QByteArray& data_)
 {
-    std::cout << "data ";
-    for (unsigned i = 0; i < data_.size(); ++i)
-    {
-        std::cout << std::hex <<
-            (static_cast<uint16_t>(data_[i]) & 0xff) << ' ';
-    }
-    std::cout << "is sent to register " << (static_cast<uint16_t>(register_)
-        & 0xff) << '\n';
+    std::cout << "query got\n";
+    registerToWriteIn = register_;
+    registersSequence[1] = register_;
+    registersSequence[3] = register_;
+    std::vector<uint8_t> usefulInfo(data_.data(), data_.data() + data_.size());
+    querySequenceWriteRegister = {
+        getMessageWriteRegister(0x00, {0x56, 0x78}),
+        getMessageWriteRegister(register_, usefulInfo),
+        getMessageWriteRegister(0x01, {0x28, 0x28}),
+        getMessageReadRegister(register_)
+    };
+    slotPrepareReadAddData();
 }
 
 void AddInfoParser::slotParseMessage(const QByteArray& array)
 {
     killTimer(timerId);
-    emit sgnUncheckedMessageGot(array);
-    if (messageIsViable(array) &&
-        getRegister(array) == registersToRead[currentQuery])
+    std::cout << "Received: ";
+    for (int i = 0; i < array.size(); ++i)
     {
-        if (currentQuery && currentQuery != registersToRead.size() - 1)
+        std::cout << std::hex << (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
+    }
+    std::cout << '\n';
+    if (registerToWriteIn)
+    {
+        if (messageIsViable(array) &&
+            getRegister(array) == registersSequence[currentQuery])
         {
             attempt = 1;
-            registersContent[currentQuery - 1] = getUsefulData(array);
+            if (currentQuery == querySequenceWriteRegister.size() - 1)
+            {
+                recievedRegisterContent = array;
+            }
+            ++currentQuery;
+        } else {
+            std::cout << "not viable or wrong register, attempt " << attempt <<
+                '\n';
+            emit sgnWritingError();
         }
-        ++currentQuery;
-        emit sgnReadingUpdate(currentQuery);
     } else {
-        std::cout << "not viable or wrong register, attempt " << attempt <<
-            '\n';
-        ++attempt;
-        if (attempt == 4) ++currentQuery;
+        if (messageIsViable(array) &&
+            getRegister(array) == registersToRead[currentQuery])
+        {
+            if (currentQuery && currentQuery != registersToRead.size() - 1)
+            {
+                attempt = 1;
+                registersContent[currentQuery - 1] = getUsefulData(array);
+            }
+            ++currentQuery;
+            emit sgnReadingUpdate(currentQuery);
+        } else {
+            std::cout << "not viable or wrong register, attempt " << attempt <<
+                '\n';
+            ++attempt;
+            if (attempt == 4) ++currentQuery;
+        }
     }
     slotSendNextMessageOrExit();
 }
 
 void AddInfoParser::slotSendNextMessageOrExit()
 {
-    if (currentQuery == querySequence.size())
+    if (registerToWriteIn)
     {
-        QObject::disconnect(reader, SIGNAL(sgnDataGotManual(const QByteArray&)),
-            this, SLOT(slotParseMessage(const QByteArray&)));
-        QObject::disconnect(reader, SIGNAL(sgnManualModeIsSet()),
-            this, SLOT(slotSendNextMessageOrExit()));
-        emit sgnReadingEnded();
-        std::cout << "All queries are got, the content is:\n";
-        for (int i = 0; i < registersContent.size(); ++i)
+        if (currentQuery == querySequenceWriteRegister.size())
         {
-            std::cout << std::hex <<
-                static_cast<uint16_t>(registersToRead[i + 1]) << "   ";
-            for (int j = 0; j < registersContent[i].size(); ++j)
+            QObject::disconnect(reader,
+                SIGNAL(sgnDataGotManual(const QByteArray&)),
+                this, SLOT(slotParseMessage(const QByteArray&)));
+            QObject::disconnect(reader,
+                SIGNAL(sgnManualModeIsSet()),
+                this, SLOT(slotSendNextMessageOrExit()));
+            emit sgnWritingSuccess(getUsefulData(recievedRegisterContent));
+            emit sgnSetAutomaticMode();
+            registerToWriteIn = 0;
+            currentQuery = 0;
+            timeouts = 0;
+        } else {
+            timerId = startTimer(TIMER_INTERVAL);
+            emit sgnSend(querySequenceWriteRegister[currentQuery]);
+        }
+    } else {
+        if (currentQuery == querySequence.size())
+        {
+            QObject::disconnect(reader,
+                SIGNAL(sgnDataGotManual(const QByteArray&)),
+                this, SLOT(slotParseMessage(const QByteArray&)));
+            QObject::disconnect(reader,
+                SIGNAL(sgnManualModeIsSet()),
+                this, SLOT(slotSendNextMessageOrExit()));
+            emit sgnReadingEnded();
+            std::cout << "All queries got, the content is:\n";
+            for (unsigned i = 0; i < registersContent.size(); ++i)
             {
                 std::cout << std::hex <<
-                    (static_cast<uint16_t>(registersContent[i][j]) & 0xff) <<
-                    ' ';
+                    static_cast<uint16_t>(registersToRead[i + 1]) << "   ";
+                for (int j = 0; j < registersContent[i].size(); ++j)
+                {
+                    std::cout << std::hex <<
+                        (static_cast<uint16_t>(registersContent[i][j]) & 0xff)
+                        << ' ';
+                }
+                std::cout << ' ' << std::dec <<
+                    registersContent[i].size() << '\n';
             }
-            std::cout << ' ' << std::dec <<  registersContent[i].size() << '\n';
+            emit sgnSendDataToGUI(registersContent);
+            registersContent =
+                std::vector<QByteArray>(registersToRead.size() - 2);
+            // otherwise previous data will be shown, if it was not read
+            // in current reading
+            emit sgnSetAutomaticMode();
+            currentQuery = 0;
+            timeouts = 0; // to read additional data again
+        } else {
+            timerId = startTimer(TIMER_INTERVAL);
+            emit sgnSend(querySequence[currentQuery]);
         }
-        emit sgnSendDataToGUI(registersContent);
-        registersContent = std::vector<QByteArray>(registersToRead.size() - 2);
-        // otherwise previous data will be shown, if it was not read in current
-        // reading
-        emit sgnSetAutomaticMode();
-        currentQuery = 0;
-        timeouts = 0; // to read additional data again
-    } else {
-        timerId = startTimer(TIMER_INTERVAL);
-        emit sgnSend(querySequence[currentQuery]);
     }
 }
 
@@ -129,4 +185,5 @@ void AddInfoParser::slotPrepareReadAddData()
     QObject::connect(reader, SIGNAL(sgnManualModeIsSet()),
         SLOT(slotSendNextMessageOrExit()));
     emit sgnSetManualMode();
+    std::cout << "slotPrepareReadAddData\n";
 }

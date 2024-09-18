@@ -25,10 +25,15 @@ Q_OBJECT
     unsigned timeouts;
     int timerId;
 
+    // to write in a register
+    std::vector<uint8_t> registersSequence;
+    std::vector<QByteArray> querySequenceWriteRegister;
+    QByteArray recievedRegisterContent;
+    int registerToWriteIn;
+
     virtual void timerEvent(QTimerEvent*);
 
 signals:
-    void sgnUncheckedMessageGot(const QByteArray&);
     void sgnSetAutomaticMode();
     void sgnSetManualMode();
     void sgninfoUpdated();
@@ -37,6 +42,8 @@ signals:
     void sgnReadingBegun();
     void sgnReadingUpdate(unsigned);
     void sgnReadingEnded();
+    void sgnWritingSuccess(const QByteArray&);
+    void sgnWritingError();
 public:
     AddInfoParser(COMPortReader* reader);
     size_t getAmountOfQueries();

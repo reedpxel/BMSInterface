@@ -27,6 +27,8 @@ Q_OBJECT
 
     QByteArray buffer_;
     int64_t previousWidgetIndex;
+    uint8_t awaitedRegisterIndex; // as enter pressed, here stored index of the
+    // widget, where written data must be written
 
     uint8_t amountOfThermoresistors; // to read 0x2e, got in 0x03, byte 22
     bool amountOfThermoresistorsGot;
@@ -49,6 +51,8 @@ Q_OBJECT
     void setTextDoubleUint8T(QLineEdit* lineEdit0, QLineEdit* lineEdit1,
         uint8_t register_);
     QString setTextSoftwareVersion(const QByteArray& array);
+    int findEditableWidgetIndex(QWidget* widget);
+    QWidget* findEditableWidgetIndex(int index);
 
 public:
     explicit AddInfoWidget(QWidget* parent = nullptr);
@@ -58,6 +62,8 @@ public:
 public slots:
     void slotShowDataOnGUI(const std::vector<QByteArray>& data_);
     void slotOnFocusChanged(QWidget* old, QWidget* now);
+    void slotOnWritingSuccess(const QByteArray& array);
+    void slotOnWritingError();
 };
 
 #endif // ADDINFOWIDGET_H

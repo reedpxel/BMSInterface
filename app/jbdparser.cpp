@@ -106,7 +106,7 @@ bool JBDParser::messageIsViable(const QByteArray& message, uint8_t* errorNumber)
 
 QByteArray JBDParser::getUsefulData(const QByteArray& message)
 {
-    return QByteArray(message.data() + 4, message[3]);
+    return QByteArray(message.data() + 4, message.size() - 7);
 }
 
 uint8_t JBDParser::getRegister(const QByteArray& message) { return message[1]; }
