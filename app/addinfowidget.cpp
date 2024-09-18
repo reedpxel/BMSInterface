@@ -115,9 +115,9 @@ QWidget* AddInfoWidget::findEditableWidgetIndex(int index)
 
 AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     parser_(qobject_cast<MainWindow*>(parent)->getReader()),
-    expectedRegisterSizes({29, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    expectedRegisterSizes({27, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
         2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-        2, 2, 2, 2, 2, 1, 1, 1, 22, 2}),
+        2, 2, 2, 2, 2, 1, 1, 1, 22/*, 2*/}),
     guiSetters({
         [this](const QByteArray& data_)
         {
@@ -533,24 +533,24 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
                 data_, 18)));
             ui->label_0xaa_10->setText(QString::number(getUInt16InArray(
                 data_, 20)));
-        }, // 0xaa
-        [this](const QByteArray& data_)
-        {
-            switch (data_[1])
-            {
-                case 0:
-                    ui->radioButton_0xe2_0->setChecked(true);
-                break;
-                case 1:
-                    ui->radioButton_0xe2_1->setChecked(true);
-                break;
-                case 2:
-                    ui->radioButton_0xe2_2->setChecked(true);
-                break;
-                case 3:
-                    ui->radioButton_0xe2_3->setChecked(true);
-            }
-        }
+        }/*, */// 0xaa
+        // [this](const QByteArray& data_)
+        // {
+        //     switch (data_[1])
+        //     {
+        //         case 0:
+        //             ui->radioButton_0xe2_0->setChecked(true);
+        //         break;
+        //         case 1:
+        //             ui->radioButton_0xe2_1->setChecked(true);
+        //         break;
+        //         case 2:
+        //             ui->radioButton_0xe2_2->setChecked(true);
+        //         break;
+        //         case 3:
+        //             ui->radioButton_0xe2_3->setChecked(true);
+        //     }
+        // }
     }),
     guiCleaners({
         [this](){ ui->lineEdit_0x03->setText(""); }, // 0x03
@@ -656,7 +656,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
             ui->label_0xaa_9->setText("");
             ui->label_0xaa_10->setText("");
         }, // 0xaa
-        [this]() { uncheckRadioButton(ui->radioButton_0xe2_0); } // 0xe2
+        // [this]() { uncheckRadioButton(ui->radioButton_0xe2_0); } // 0xe2
     }),
     editableRegistersObjects(),
     onFocusSet({
@@ -1348,7 +1348,6 @@ void AddInfoWidget::slotShowDataOnGUI(const std::vector<QByteArray>& data_)
     }
     if (!unreadRegisters.empty())
     {
-    // TO DO: чтобы выводило названия данных, а не номера регистров
         QString msg;
         if (unreadRegisters.size() == expectedRegisterSizes.size())
         {
@@ -1386,7 +1385,8 @@ void AddInfoWidget::slotOnWritingSuccess(const QByteArray& array)
     std::cout << "new buffer: ";
     for (int i = 0; i < array.size(); ++i)
     {
-        std::cout << std::hex << (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
+        std::cout << std::hex <<
+            (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
     }
     std::cout << '\n';
     std::invoke(setPreviousBuffer[awaitedRegisterIndex], array);
