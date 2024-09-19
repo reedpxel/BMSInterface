@@ -125,7 +125,7 @@ QByteArray JBDParser::uint16_tToArray(const QString& str,
 
 QByteArray JBDParser::QStringToJBDString(const QString& str)
 {
-    uint8_t data_[13];
+    uint8_t data_[256];
     data_[0] = str.size();
     memcpy(data_ + 1, str.toStdString().data(), str.size());
     return QByteArray(reinterpret_cast<char*>(data_), str.size() + 1);
@@ -136,8 +136,8 @@ QString JBDParser::JBDStringToQString(const QByteArray &array)
     if (array.isEmpty()) return QString();
     const uint8_t* unsignedPointer =
         reinterpret_cast<const uint8_t*>(array.data());
-    uint8_t sz = *unsignedPointer > 12 ? 12 : *unsignedPointer;
-    char str[14];
+    uint8_t sz = *unsignedPointer;
+    char str[257];
     memcpy(str, array.data() + 1, sz);
     str[sz] = '\0';
     return QString(str);

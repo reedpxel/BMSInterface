@@ -127,7 +127,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         }, // 0x03
         [this](const QByteArray& data_)
         {
-            ui->lineEdit_0x05->setText(parser_.JBDStringToQString(data_));
+            ui->lineEdit_0x05->setText(QString(data_));
         }, // 0x05
         [this](const QByteArray& data_)
         {
