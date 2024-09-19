@@ -2597,35 +2597,18 @@
             </property>
            </widget>
           </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBox_32">
-         <property name="title">
-          <string>Calibration:</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_37">
           <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>Voltage measurement calibration</string>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_4">
-            <property name="text">
-             <string>Temperature measurement calibration</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_6">
-            <property name="text">
-             <string>Current measurement calibration</string>
-            </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -2643,66 +2626,6 @@
         </widget>
        </item>
       </layout>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_33">
-       <property name="title">
-        <string>Other:</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_36">
-        <item>
-         <widget class="QCheckBox" name="checkBox_2">
-          <property name="text">
-           <string>Enable line balancing</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="checkBox_3">
-          <property name="text">
-           <string>Enable line charge balancing</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_23">
-          <property name="title">
-           <string>Lines' status:</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_43">
-           <item>
-            <widget class="QRadioButton" name="radioButton_0xe2_0">
-             <property name="text">
-              <string>Enable all lines</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_0xe2_2">
-             <property name="text">
-              <string>Disable odd lines</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_0xe2_1">
-             <property name="text">
-              <string>Disable even lines</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="radioButton_0xe2_3">
-             <property name="text">
-              <string>Disable all lines</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </item>
     </layout>
    </item>

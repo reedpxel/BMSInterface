@@ -33,6 +33,9 @@ Q_OBJECT
     uint8_t amountOfThermoresistors; // to read 0x2e, got in 0x03, byte 22
     bool amountOfThermoresistorsGot;
 
+    bool dataRead; // initially false, gets true as widget is opened
+                   // after reading of data
+
     Ui::AddInfoWidget* ui;
 
     uint16_t getUInt16InArray(const QByteArray& array, int index);
@@ -64,6 +67,7 @@ public slots:
     void slotOnFocusChanged(QWidget* old, QWidget* now);
     void slotOnWritingSuccess(const QByteArray& array);
     void slotOnWritingError();
+    void slotOnTabChosen(int);
 };
 
 #endif // ADDINFOWIDGET_H

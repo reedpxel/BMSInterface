@@ -7,9 +7,6 @@ MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
 {
     ui->setupUi(this);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
-    // why - 10 ?
-    batterySlider->resize(ui->batterySliderWidget->width() - 10,
-        ui->batterySliderWidget->height() - 10);
     ui->tempsTable->setFocusPolicy(Qt::NoFocus);
     ui->linesVoltageTable->setFocusPolicy(Qt::NoFocus);
     // main data setters
@@ -26,7 +23,16 @@ MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
 
 void MainInfoWidget::resizeEvent(QResizeEvent*)
 {
-    batterySlider->resize(ui->batterySliderWidget->size());
+    int expectedWidth = ui->batterySliderWidget->width();
+    int expectedHeight = expectedWidth * 1.3356;
+    if (expectedHeight > ui->batterySliderWidget->height())
+    {
+        expectedWidth = ui->batterySliderWidget->height() / 1.3356;
+        expectedHeight = ui->batterySliderWidget->height();
+    }
+    batterySlider->resize(expectedWidth, expectedHeight);
+    batterySlider->move((ui->batterySliderWidget->width() - batterySlider->width()) / 2,
+        (ui->batterySliderWidget->height() - batterySlider->height()) / 2);
 }
 
 MainInfoWidget::~MainInfoWidget() { delete ui; }

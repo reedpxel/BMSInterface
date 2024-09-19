@@ -1238,6 +1238,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     awaitedRegisterIndex(0),
     amountOfThermoresistors(0),
     amountOfThermoresistorsGot(false),
+    dataRead(false),
     ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
@@ -1397,4 +1398,13 @@ void AddInfoWidget::slotOnWritingError()
     std::invoke(setPreviousBuffer[awaitedRegisterIndex], buffer_);
     QMessageBox::warning(this, "Error", "Writing error");
 
+}
+
+void AddInfoWidget::slotOnTabChosen(int currentTab)
+{
+    if (currentTab == 1 && !dataRead)
+    {
+        dataRead = true;
+        ui->updateButton->click();
+    }
 }

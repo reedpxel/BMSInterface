@@ -177,5 +177,4 @@ void AddInfoParser::slotPrepareReadAddData()
     QObject::connect(reader, SIGNAL(sgnManualModeIsSet()),
         SLOT(slotSendNextMessageOrExit()));
     emit sgnSetManualMode();
-    std::cout << "slotPrepareReadAddData\n";
 }

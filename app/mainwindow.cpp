@@ -42,6 +42,10 @@ void MainWindow::drawConnectedWindow()
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
 
+    // reading additional data if addInfoWidget tab clicked
+    QObject::connect(ui->tabWidget, SIGNAL(currentChanged(int)), addInfoWidget,
+        SLOT(slotOnTabChosen(int)));
+
     // drawing a progress bar while reading of add data proceeds
     QObject::connect(addInfoWidget->getParser(), SIGNAL(sgnReadingBegun()),
         SLOT(slotAddInfoReadBegun()));

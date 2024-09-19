@@ -4,7 +4,6 @@
 #include "maininfoparser.h"
 #include "mainwindow.h"
 #include <QWidget>
-#include <future>
 
 namespace Ui {
 class MainInfoWidget;
