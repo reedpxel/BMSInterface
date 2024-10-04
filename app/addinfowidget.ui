@@ -1569,6 +1569,11 @@
        <layout class="QHBoxLayout" name="horizontalLayout_18">
         <item>
          <widget class="QGroupBox" name="groupBox_24">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>Short curcuit:</string>
           </property>
@@ -1577,6 +1582,11 @@
             <layout class="QHBoxLayout" name="horizontalLayout_23">
              <item>
               <widget class="QLabel" name="label_116">
+               <property name="font">
+                <font>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Short curcuit release time, s</string>
                </property>
@@ -1589,8 +1599,19 @@
            </item>
            <item>
             <widget class="QRadioButton" name="radioButton_0x38_07">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
              <property name="text">
               <string>All the values below must be multiplied by 2</string>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -1598,63 +1619,156 @@
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
               <widget class="QGroupBox" name="groupBox_26">
+               <property name="font">
+                <font>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
                <property name="title">
                 <string>Shunt voltage:</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_45">
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02100">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>22 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02101">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>33 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02102">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>44 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02103">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>56 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02104">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>67 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02105">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>78 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02106">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>89 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02107">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>100 mV</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1663,35 +1777,84 @@
              </item>
              <item>
               <widget class="QGroupBox" name="groupBox_25">
+               <property name="font">
+                <font>
+                 <pointsize>8</pointsize>
+                </font>
+               </property>
                <property name="title">
                 <string>Overvoltage duration:</string>
                </property>
                <layout class="QVBoxLayout" name="verticalLayout_44">
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0430">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>70 us</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0431">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>100 us</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0432">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>200 us</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0433">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="font">
+                   <font>
+                    <pointsize>8</pointsize>
+                   </font>
+                  </property>
                   <property name="text">
                    <string>400 us</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
@@ -1705,125 +1868,311 @@
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_31">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
           <property name="title">
            <string>Secondary circuit overcurrent:</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_16">
            <item>
             <widget class="QGroupBox" name="groupBox_28">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
              <property name="title">
               <string>Shunt voltage:</string>
              </property>
              <layout class="QGridLayout" name="gridLayout_3">
-              <item row="0" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032100">
-                <property name="text">
-                 <string>8 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QRadioButton" name="radioButton_0x38_032108">
-                <property name="text">
-                 <string>31 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032101">
-                <property name="text">
-                 <string>11 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QRadioButton" name="radioButton_0x38_032109">
-                <property name="text">
-                 <string>33 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032102">
-                <property name="text">
-                 <string>14 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QRadioButton" name="radioButton_0x38_03210a">
-                <property name="text">
-                 <string>36 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032103">
-                <property name="text">
-                 <string>17 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QRadioButton" name="radioButton_0x38_03210b">
-                <property name="text">
-                 <string>39 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032104">
-                <property name="text">
-                 <string>19 mV</string>
-                </property>
-               </widget>
-              </item>
-              <item row="4" column="1">
-               <widget class="QRadioButton" name="radioButton_0x38_03210c">
-                <property name="text">
-                 <string>42 mV</string>
-                </property>
-               </widget>
-              </item>
               <item row="5" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032105">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>22 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="5" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210d">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>44 mV</string>
                 </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
-              <item row="6" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032106">
+              <item row="3" column="1">
+               <widget class="QRadioButton" name="radioButton_0x38_03210b">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>25 mV</string>
+                 <string>39 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QRadioButton" name="radioButton_0x38_032108">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>31 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032103">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>17 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032100">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>8 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QRadioButton" name="radioButton_0x38_03210a">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>36 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032101">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>11 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032104">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>19 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QRadioButton" name="radioButton_0x38_032109">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>33 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="6" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210e">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>47 mV</string>
                 </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
                </widget>
               </item>
-              <item row="7" column="0">
-               <widget class="QRadioButton" name="radioButton_0x38_032107">
+              <item row="2" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032102">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
-                 <string>28 mV</string>
+                 <string>14 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032106">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>25 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="QRadioButton" name="radioButton_0x38_03210c">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>42 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item row="7" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210f">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>50 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item row="7" column="0">
+               <widget class="QRadioButton" name="radioButton_0x38_032107">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>28 mV</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1832,63 +2181,156 @@
            </item>
            <item>
             <widget class="QGroupBox" name="groupBox_27">
+             <property name="font">
+              <font>
+               <pointsize>8</pointsize>
+              </font>
+             </property>
              <property name="title">
               <string>Overvoltage duration:</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_46">
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06540">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>8 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06541">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>20 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06542">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>40 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06543">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>80 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06544">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>160 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06545">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>320 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06546">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>640 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06547">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>8</pointsize>
+                 </font>
+                </property>
                 <property name="text">
                  <string>1280 ms</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1994,35 +2436,84 @@
          </item>
          <item row="1" column="0">
           <widget class="QGroupBox" name="groupBox_29">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+            </font>
+           </property>
            <property name="title">
             <string>Secondary cell undervoltage protection delay:</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_21">
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0760">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>1 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0761">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>4 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0762">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>8 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0763">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>16 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2031,35 +2522,84 @@
          </item>
          <item row="1" column="1" colspan="2">
           <widget class="QGroupBox" name="groupBox_30">
+           <property name="font">
+            <font>
+             <pointsize>8</pointsize>
+            </font>
+           </property>
            <property name="title">
             <string>Secondary cell overvoltage protection delay:</string>
            </property>
            <layout class="QHBoxLayout" name="horizontalLayout_22">
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0540">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>1 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0541">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>2 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0542">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>4 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0543">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
               <property name="text">
                <string>8 s</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2162,6 +2702,11 @@
         </item>
         <item>
          <widget class="QLabel" name="label_23">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Device name (0x05):</string>
           </property>
@@ -2169,6 +2714,11 @@
         </item>
         <item>
          <widget class="QLabel" name="label_115">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
           <property name="text">
            <string>Barcode:</string>
           </property>
@@ -2236,10 +2786,22 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_0x05"/>
+         <widget class="QLineEdit" name="lineEdit_0x05">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_0xa2"/>
+         <widget class="QLineEdit" name="lineEdit_0xa2">
+          <property name="font">
+           <font>
+            <pointsize>8</pointsize>
+           </font>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -2578,6 +3140,11 @@
          <layout class="QVBoxLayout" name="verticalLayout_33">
           <item>
            <widget class="QCheckBox" name="checkBox">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Password protection</string>
             </property>
@@ -2585,6 +3152,11 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_2">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Enter password</string>
             </property>
@@ -2592,6 +3164,11 @@
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_5">
+            <property name="font">
+             <font>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
             <property name="text">
              <string>Change password</string>
             </property>

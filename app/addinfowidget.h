@@ -1,6 +1,5 @@
 #ifndef ADDINFOWIDGET_H
 #define ADDINFOWIDGET_H
-#include <QWidget>
 #include <vector>
 #include <iostream>
 #include <functional>
@@ -35,6 +34,7 @@ Q_OBJECT
 
     bool dataRead; // initially false, gets true as widget is opened
                    // after reading of data
+    bool instantlyChangeParameters;
 
     Ui::AddInfoWidget* ui;
 
@@ -68,6 +68,7 @@ public slots:
     void slotOnWritingSuccess(const QByteArray& array);
     void slotOnWritingError();
     void slotOnTabChosen(int);
+    void slotChangeInstantlyChangeParameters();
 };
 
 #endif // ADDINFOWIDGET_H

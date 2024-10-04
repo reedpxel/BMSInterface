@@ -1,13 +1,220 @@
 #include "logswidget.h"
 #include "ui_logswidget.h"
 
+int LogsWidget::getCurrentGraph()
+{
+    int res = -1;
+    for (int i = 0; i < radioButtonsState.size(); ++i)
+    {
+        if (radioButtonsState[i])
+        {
+            res = i;
+            break;
+        }
+    }
+    return res;
+}
+
+void LogsWidget::repaintGraph()
+{
+    int currentGraph = getCurrentGraph();
+    if (currentGraph < 0) return;
+    for (int i = 0; i < customPlot->graphCount(); ++i)
+    {
+        customPlot->graph(i)->data()->clear();
+    }
+    switch (currentGraph)
+    {
+        case 3:
+            for (auto& list_ : temperatureDots)
+            {
+                customPlot->addGraph();
+            }
+        break;
+        case 4:
+            for (auto& list_ : lineVoltageDots)
+            {
+                customPlot->addGraph();
+            }
+        break;
+        default:
+            customPlot->addGraph();
+    }
+    QVector<double> data_;
+    QVector<double> x_;
+    switch (currentGraph)
+    {
+        case 0:
+        {
+            if (totalVoltageDots.empty()) return;
+            for (int i = 0; i < totalVoltageDots.size(); ++i)
+            {
+                data_.push_back(totalVoltageDots[i].first);
+                x_.push_back(totalVoltageDots[i].second.msecsSinceStartOfDay());
+            }
+            customPlot->graph(0)->setData(x_, data_);
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < data_.size(); ++i)
+            {
+                if (data_[i] > max_) max_ = data_[i];
+                if (data_[i] < min_) min_ = data_[i];
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 1, min_ - 1);
+        }
+        break;
+        case 1:
+        {
+            if (currentDots.empty()) return;
+            for (int i = 0; i < currentDots.size(); ++i)
+            {
+                data_.push_back(currentDots[i].first);
+                x_.push_back(currentDots[i].second.msecsSinceStartOfDay());
+            }
+            customPlot->graph(0)->setData(x_, data_);
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < data_.size(); ++i)
+            {
+                if (data_[i] > max_) max_ = data_[i];
+                if (data_[i] < min_) min_ = data_[i];
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 1, min_ - 1);
+        }
+        break;
+        case 2:
+        {
+            if (currentCapacityDots.empty()) return;
+            for (int i = 0; i < currentCapacityDots.size(); ++i)
+            {
+                data_.push_back(currentCapacityDots[i].first);
+                x_.push_back(
+                    currentCapacityDots[i].second.msecsSinceStartOfDay());
+            }
+            customPlot->graph(0)->setData(x_, data_);
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < data_.size(); ++i)
+            {
+                if (data_[i] > max_) max_ = data_[i];
+                if (data_[i] < min_) min_ = data_[i];
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 1, min_ - 1);
+        }
+        break;
+        case 3:
+        {
+            if (temperatureDots.empty()) return;
+            for (auto& list_ : temperatureDots)
+            {
+                if (list_.empty()) return;
+            }
+            QVector<QVector<double>> vectorsData_(temperatureDots.size());
+            for (int i = 0; i < temperatureDots[0].size(); ++i)
+            {
+                x_.push_back(
+                    temperatureDots[0][i].second.msecsSinceStartOfDay());
+            }
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < temperatureDots.size(); ++i)
+            {
+                for (int j = 0; j < temperatureDots[i].size(); ++j)
+                {
+                    double value = temperatureDots[i][j].first;
+                    vectorsData_[i].push_back(value);
+                    if (value > max_) max_ = value;
+                    if (value < min_) min_ = value;
+                }
+                customPlot->graph(i)->setData(x_, vectorsData_[i]);
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 1, min_ - 1);
+        }
+        break;
+        case 4:
+        {
+            if (lineVoltageDots.empty()) return;
+            for (auto& list_ : lineVoltageDots)
+            {
+                if (list_.empty()) return;
+            }
+            QVector<QVector<double>> vectorsData_(lineVoltageDots.size());
+            for (int i = 0; i < lineVoltageDots[0].size(); ++i)
+            {
+                x_.push_back(
+                    lineVoltageDots[0][i].second.msecsSinceStartOfDay());
+            }
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < lineVoltageDots.size(); ++i)
+            {
+                for (int j = 0; j < lineVoltageDots[i].size(); ++j)
+                {
+                    double value = lineVoltageDots[i][j].first;
+                    vectorsData_[i].push_back(value);
+                    if (value > max_) max_ = value;
+                    if (value < min_) min_ = value;
+                }
+                customPlot->graph(i)->setData(x_, vectorsData_[i]);
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 0.01, min_ - 0.01);
+        }
+        break;
+        case 5:
+        {
+            if (differenceDots.empty()) return;
+            for (int i = 0; i < differenceDots.size(); ++i)
+            {
+                data_.push_back(differenceDots[i].first);
+                x_.push_back(differenceDots[i].second.msecsSinceStartOfDay());
+            }
+            customPlot->graph(0)->setData(x_, data_);
+            double max_ = INT_MIN;
+            double min_ = INT_MAX;
+            for (int i = 0; i < data_.size(); ++i)
+            {
+                if (data_[i] > max_) max_ = data_[i];
+                if (data_[i] < min_) min_ = data_[i];
+            }
+            customPlot->xAxis->setRange(x_.front(), x_.back());
+            customPlot->yAxis->setRange(max_ + 0.01, min_ - 0.01);
+        }
+        break;
+    }
+    customPlot->replot();
+}
+
 LogsWidget::LogsWidget(QWidget *parent) : QWidget(parent),
-    ui(new Ui::LogsWidget), plotter(new GraphPlotter), logsKept(false),
-    logsFile()
+    customPlot(new QCustomPlot),
+    totalVoltageDots(),
+    currentDots(),
+    currentCapacityDots(),
+    temperatureDots(),
+    lineVoltageDots(),
+    differenceDots(),
+    logsKept(false),
+    logsFile(),
+    graphDataListSize(25),
+    ui(new Ui::LogsWidget)
 {
     ui->setupUi(this);
+    radioButtonsState = {
+        ui->radioButtonTotalVoltage->isChecked(),
+        ui->radioButtonCurrent->isChecked(),
+        ui->radioButtonCurrentCapacity->isChecked(),
+        ui->radioButtonTemperatures->isChecked(),
+        ui->radioButtonLineVoltage->isChecked(),
+        ui->radioButtonDifference->isChecked()
+    };
+    customPlot->xAxis->setTickLabels(false);
+    customPlot->yAxis->setLabel("Total voltage, V");
     QGridLayout* plotterLayout = new QGridLayout;
-    plotterLayout->addWidget(plotter);
+    plotterLayout->addWidget(customPlot);
     ui->plotterBase->setLayout(plotterLayout);
 }
 
@@ -83,14 +290,12 @@ void LogsWidget::slotWriteMainDataInFile(const MainInfo& mainInfo_)
     }
     if (ui->checkBoxErrors->isChecked())
     {
-    // TO DO
         if (!mainInfo_._BMSErrors) dataToWrite.append("No errors ");
         else dataToWrite.append("Error code: " +
             QString::number(mainInfo_._BMSErrors, 2) + " ");
     }
     if (ui->checkBoxLineBalanceStatus->isChecked())
     {
-    // TO DO
         dataToWrite.append("Line balance state: " +
             QString::number(mainInfo_.linesBalanceStatus, 2) + " ");
     }
@@ -119,4 +324,113 @@ void LogsWidget::slotWriteMainDataInFile(const MainInfo& mainInfo_)
     }
     dataToWrite.append("\n");
     stream << dataToWrite;
+}
+
+void LogsWidget::slotUpdate03Data(const MainInfo& mainInfo)
+{
+    totalVoltageDots.push_back(
+        std::make_pair(mainInfo.totalVoltage / 100., QTime::currentTime()));
+    if (totalVoltageDots.size() > graphDataListSize)
+    {
+        totalVoltageDots.pop_front();
+    }
+    currentDots.push_back(
+        std::make_pair(mainInfo.current / 100., QTime::currentTime()));
+    if (currentDots.size() > graphDataListSize)
+    {
+        currentDots.pop_front();
+    }
+    currentCapacityDots.push_back(
+        std::make_pair(mainInfo.currentCapacity / 100., QTime::currentTime()));
+    if (currentCapacityDots.size() > graphDataListSize)
+    {
+        currentCapacityDots.pop_front();
+    }
+    if (temperatureDots.size() != mainInfo.temperatures.size())
+    {
+        temperatureDots.resize(mainInfo.temperatures.size());
+    }
+    for (int i = 0; i < mainInfo.temperatures.size(); ++i)
+    {
+        temperatureDots[i].push_back(
+            std::make_pair(mainInfo.temperatures[i] / 10.,
+            QTime::currentTime()));
+        if (temperatureDots[i].size() > graphDataListSize)
+        {
+            temperatureDots[i].pop_front();
+        }
+    }
+    int currentGraph = getCurrentGraph();
+    if (currentGraph >= 0 && currentGraph <= 2 || currentGraph == 5)
+    {
+        repaintGraph();
+    }
+}
+
+void LogsWidget::slotUpdate04Data(const MainInfo& mainInfo)
+{
+    if (lineVoltageDots.size() != mainInfo.linesVoltage.size())
+    {
+        lineVoltageDots.resize(mainInfo.linesVoltage.size());
+    }
+    for (int i = 0; i < lineVoltageDots.size(); ++i)
+    {
+        lineVoltageDots[i].push_back(
+            std::make_pair(mainInfo.linesVoltage[i]/ 1000.,
+            QTime::currentTime()));
+        if (lineVoltageDots[i].size() > graphDataListSize)
+        {
+            lineVoltageDots[i].pop_front();
+        }
+    }
+    differenceDots.push_back(
+        std::make_pair(mainInfo.diff / 1000., QTime::currentTime()));
+    if (differenceDots.size() > graphDataListSize)
+    {
+        differenceDots.pop_front();
+    }
+    int currentGraph = getCurrentGraph();
+    if (currentGraph == 3 || currentGraph == 4) repaintGraph();
+}
+
+void LogsWidget::on_radioButtonTotalVoltage_clicked()
+{
+    radioButtonsState = {true, false, false, false, false, false};
+    customPlot->yAxis->setLabel("Total voltage, V");
+    repaintGraph();
+}
+
+void LogsWidget::on_radioButtonCurrent_clicked()
+{
+    radioButtonsState = {false, true, false, false, false, false};
+    customPlot->yAxis->setLabel("Current, A");
+    repaintGraph();
+}
+
+void LogsWidget::on_radioButtonCurrentCapacity_clicked()
+{
+    radioButtonsState = {false, false, true, false, false, false};
+    customPlot->yAxis->setLabel("Current capacity, A*h");
+    repaintGraph();
+}
+
+void LogsWidget::on_radioButtonTemperatures_clicked()
+{
+    radioButtonsState = {false, false, false, true, false, false};
+    customPlot->yAxis->setLabel("Temperatures, °С");
+    repaintGraph();
+}
+
+void LogsWidget::on_radioButtonLineVoltage_clicked()
+{
+    radioButtonsState = {false, false, false, false, true, false};
+    customPlot->yAxis->setLabel("Line voltages, V");
+    repaintGraph();
+}
+
+void LogsWidget::on_radioButtonDifference_clicked()
+{
+    radioButtonsState = {false, false, false, false, false, true};
+    customPlot->yAxis->setLabel("Line voltage difference, V");
+    repaintGraph();
 }

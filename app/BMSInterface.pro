@@ -1,4 +1,4 @@
-QT       += core gui widgets serialport testlib
+QT       += core gui widgets serialport testlib printsupport
 
 # greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,25 +13,27 @@ SOURCES += \
     addinfowidget.cpp \
     batteryslider.cpp \
     comportreader.cpp \
-    graphplotter.cpp \
     jbdparser.cpp \
     logswidget.cpp \
     main.cpp \
+    maininfo.cpp \
     maininfoparser.cpp \
     maininfowidget.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qcustomplot.cpp
 
 HEADERS += \
     addinfoparser.h \
     addinfowidget.h \
     batteryslider.h \
     comportreader.h \
-    graphplotter.h \
     jbdparser.h \
     logswidget.h \
+    maininfo.h \
     maininfoparser.h \
     maininfowidget.h \
-    mainwindow.h
+    mainwindow.h \
+    qcustomplot.h
 
 FORMS += \
     addinfowidget.ui \

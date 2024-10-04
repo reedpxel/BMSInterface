@@ -36,6 +36,13 @@
       <string>Graphs:</string>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="2">
+       <widget class="QRadioButton" name="radioButtonCurrentCapacity">
+        <property name="text">
+         <string>Current capacity</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QRadioButton" name="radioButtonTotalVoltage">
         <property name="text">
@@ -46,52 +53,31 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QRadioButton" name="radioButtonCurrentCapacity">
-        <property name="text">
-         <string>Current capacity</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QRadioButton" name="radioButtonTemperatures">
-        <property name="text">
-         <string>Temperatures</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="showCurrentWindowButton">
-        <property name="text">
-         <string>Show on current window</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QRadioButton" name="radioButtonCurrent">
-        <property name="text">
-         <string>Current</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QRadioButton" name="radioButtonLineVoltage">
-        <property name="text">
-         <string>Lines' voltage</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
+      <item row="3" column="2">
        <widget class="QRadioButton" name="radioButtonDifference">
         <property name="text">
          <string>Lines' voltages difference</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="showSeparateWindowButton">
+      <item row="3" column="0">
+       <widget class="QRadioButton" name="radioButtonTemperatures">
         <property name="text">
-         <string>Show on a separate window</string>
+         <string>Temperatures</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QRadioButton" name="radioButtonCurrent">
+        <property name="text">
+         <string>Current</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QRadioButton" name="radioButtonLineVoltage">
+        <property name="text">
+         <string>Lines' voltage</string>
         </property>
        </widget>
       </item>

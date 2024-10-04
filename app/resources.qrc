@@ -1,8 +1,10 @@
 <RCC>
-    <qresource prefix="/new/images">
+    <qresource prefix="/images">
         <file>no-connection.png</file>
         <file>logo.png</file>
         <file>battery.png</file>
     </qresource>
+    <qresource prefix="/themes"/>
+    <qresource prefix="/stylesheets"/>
     <qresource prefix="/"/>
 </RCC>

@@ -3,7 +3,9 @@
 
 MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
     parser_(qobject_cast<MainWindow*>(parent)->getReader()),
-    isActive(false), ui(new Ui::MainInfoWidget)
+    isActive(false),
+    instantlyChangeParameters(false),
+    ui(new Ui::MainInfoWidget)
 {
     ui->setupUi(this);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
@@ -14,6 +16,25 @@ MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
         SLOT(slotData03Updated(const MainInfo&)));
     QObject::connect(&parser_, SIGNAL(sgnData04Updated(const MainInfo&)),
         SLOT(slotData04Updated(const MainInfo&)));
+    // slots to set opposite text if according option chosen in menu
+    connect(ui->FETChargeButton, &QPushButton::clicked,
+        [this]()
+        {
+            if (instantlyChangeParameters)
+            {
+                ui->FETChargeLabel->setText(
+                    parser_.mainInfo.chargeFETState ? "Closed" : "Opened");
+            }
+        });
+    connect(ui->FETDischargeButton, &QPushButton::clicked,
+        [this]()
+        {
+            if (instantlyChangeParameters)
+            {
+                ui->FETDischargeLabel->setText(
+                    parser_.mainInfo.dischargeFETState ? "Closed" : "Opened");
+            }
+        });
     // change FET state buttons
     connect(ui->FETChargeButton, SIGNAL(clicked()),
         &parser_, SLOT(slotOnFETChargeButtonClicked()));
@@ -267,4 +288,9 @@ void MainInfoWidget::slotNoAnswer()
     ui->ConfigChB->setChecked(false);
     ui->linesVoltageTable->setRowCount(0);
     ui->differenceLabel->setText("");
+}
+
+void MainInfoWidget::slotChangeInstantlyChangeParameters()
+{
+    instantlyChangeParameters = instantlyChangeParameters ? false : true;
 }

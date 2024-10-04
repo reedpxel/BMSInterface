@@ -1,10 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QtWidgets>
+#include <QTime>
 #include "maininfowidget.h"
 #include "addinfowidget.h"
-#include "comportreader.h"
 #include "logswidget.h"
+
 
 class MainInfoWidget;
 class AddInfoWidget;
@@ -20,6 +21,7 @@ class MainWindow : public QMainWindow
 Q_OBJECT
     Ui::MainWindow* ui;
 
+    QMenuBar* menubar_;
     MainInfoWidget* mainInfoWidget;
     AddInfoWidget* addInfoWidget;
     LogsWidget* logsWidget;
@@ -32,6 +34,7 @@ Q_OBJECT
 
     void drawNoConnectionWindow();
     void drawConnectedWindow();
+    void drawMenuBar();
 public:
     MainWindow(COMPortReader* reader);
     ~MainWindow();
@@ -48,7 +51,10 @@ public slots:
     void slotAddInfoReadEnded();
     void slotSetStatusBarMessage(const QByteArray&);
 private slots:
-    void on_actionShow_received_data_triggered(bool checked);
+    void slotShowReceivedData(bool checked);
+    void slotWaitReply();
+    void slotLightAction();
+    void slotDarkAction();
 };
 
 #endif // MAINWINDOW_H

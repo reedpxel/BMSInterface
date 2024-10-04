@@ -9,10 +9,26 @@
     5 - wrong crc
 */
 
+// MainInfo::MainInfo() :
+//     error(1),
+//     totalVoltage(0),
+//     current(0),
+//     currentCapacity(0),
+//     maximumCapacity(0),
+//     cycles(0),
+//     linesBalanceStatus(0),
+//     _BMSErrors(0),
+//     capacityInPercents(0),
+//     chargeFETState(false),
+//     dischargeFETState(false),
+//     lines(0),
+//     temperatures(3, 0),
+//     linesVoltage(13, 0),
+//     diff(0) {}
+
 MainInfoParser::MainInfoParser(COMPortReader* reader) : QObject(),
     reader(reader),
-    mainInfo({1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        std::vector<int>(3, 0), std::vector<int>(13, 0), 0})
+    mainInfo()
 {
     QObject::connect(reader, SIGNAL(sgnDataGotAutomatic(const QByteArray&)),
         SLOT(slotParseMessage(const QByteArray&)));

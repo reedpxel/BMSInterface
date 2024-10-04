@@ -1,8 +1,8 @@
 #include "batteryslider.h"
 
-
 BatterySlider::BatterySlider(QWidget* parent) : QWidget(parent), percent_(50),
-    isActive(false), batteryPixmap(new QPixmap(":/new/images/battery.png")) {}
+    isActive(false), batteryPixmap(new QPixmap(":/images/battery.png"))
+    {}
 
 void BatterySlider::paintEvent(QPaintEvent*)
 {
@@ -14,22 +14,22 @@ void BatterySlider::paintEvent(QPaintEvent*)
         if (percent_ <= 0)
         {
             greenRect = QRectF(
-                0.0678 * width(),
+                0.07 * width(), // 0.0678
                 0.913 * height(),
-                0.864 * width(),
+                0.83 * width(), // 0.864
                 0);
         } else if (percent_ >= 100) {
             greenRect = QRectF(
-                0.0678 * width(),
+                0.07 * width(),
                 0.127 * height(),
-                0.864 * width(),
+                0.83 * width(),
                 0.786 * height());
         } else {
             greenRect = QRectF(
-            0.0678 * width(),
-            (0.786 * (100 - percent_) / 100. + 0.127)* height(),
-            0.864 * width(),
-            0.786 * percent_ / 100. * height());
+                0.07 * width(),
+                (0.786 * (100 - percent_) / 100. + 0.127)* height(),
+                0.83 * width(),
+                0.786 * percent_ / 100. * height());
         }
         painter_.fillRect(greenRect, QBrush(QColor(0, 255, 0)));
         painter_.setPen(QPen(QColor(0, 0, 0), 20));

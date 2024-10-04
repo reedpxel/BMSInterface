@@ -64,6 +64,7 @@ void AddInfoWidget::setTextUint16T(QLineEdit* lineEdit, uint8_t register_,
     QByteArray value =
         parser_.uint16_tToArray(lineEdit->text(), signsAfterComma);
     if (buffer_ != value) parser_.setRegisterValue(register_, value);
+    if (instantlyChangeParameters) buffer_ = value;
     lineEdit->clearFocus();
 }
 
@@ -71,6 +72,7 @@ void AddInfoWidget::setTextJBDString(QLineEdit* lineEdit, uint8_t register_)
 {
     QByteArray value = parser_.QStringToJBDString(lineEdit->text());
     if (buffer_ != value) parser_.setRegisterValue(register_, value);
+    if (instantlyChangeParameters) buffer_ = value;
     lineEdit->clearFocus();
 }
 
@@ -78,6 +80,7 @@ void AddInfoWidget::setTextTemperature(QLineEdit* lineEdit, uint8_t register_)
 {
     QByteArray value = parser_.temperatureToArray(lineEdit->text());
     if (buffer_ != value) parser_.setRegisterValue(register_, value);
+    if (instantlyChangeParameters) buffer_ = value;
     lineEdit->clearFocus();
 }
 
@@ -88,6 +91,7 @@ void AddInfoWidget::setTextDoubleUint8T(QLineEdit* lineEdit0,
     uint8_t second_ = lineEdit1->text().toInt();
     uint8_t data_[2] = {first_, second_};
     QByteArray value(reinterpret_cast<char*>(data_), 2);
+    if (instantlyChangeParameters) buffer_ = value;
     if (buffer_ != value) parser_.setRegisterValue(register_, value);
     lineEdit0->clearFocus();
     lineEdit1->clearFocus();
@@ -922,6 +926,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
             QByteArray array =
                 parser_.dateToQByteArray(ui->lineEdit_0x15->text());
             if (buffer_ != array) parser_.setRegisterValue(0x15, array);
+            if (instantlyChangeParameters) buffer_ = array;
             ui->lineEdit_0x15->clearFocus();
         }, // 0x15
         [this](){ setTextJBDString(ui->lineEdit_0x16, 0x16); }, // 0x16
@@ -1239,6 +1244,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     amountOfThermoresistors(0),
     amountOfThermoresistorsGot(false),
     dataRead(false),
+    instantlyChangeParameters(false),
     ui(new Ui::AddInfoWidget)
 {
     ui->setupUi(this);
@@ -1407,4 +1413,10 @@ void AddInfoWidget::slotOnTabChosen(int currentTab)
         dataRead = true;
         ui->updateButton->click();
     }
+}
+
+void AddInfoWidget::slotChangeInstantlyChangeParameters()
+{
+    instantlyChangeParameters = instantlyChangeParameters ? false : true;
+    std::cout << instantlyChangeParameters << '\n';
 }

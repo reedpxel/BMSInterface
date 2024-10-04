@@ -3,7 +3,6 @@
 #include "batteryslider.h"
 #include "maininfoparser.h"
 #include "mainwindow.h"
-#include <QWidget>
 
 namespace Ui {
 class MainInfoWidget;
@@ -16,13 +15,13 @@ Q_OBJECT
 
     BatterySlider* batterySlider;
     bool isActive;
+    bool instantlyChangeParameters;
 
 public:
     explicit MainInfoWidget(QWidget* parent = nullptr);
     virtual void resizeEvent(QResizeEvent*);
     ~MainInfoWidget();
     MainInfoParser* getParser();
-
 private:
     Ui::MainInfoWidget* ui;
 public slots:
@@ -30,6 +29,7 @@ public slots:
     void slotData03Updated(const MainInfo&);
     void slotData04Updated(const MainInfo&);
     void slotNoAnswer();
+    void slotChangeInstantlyChangeParameters();
 };
 
 #endif // MAININFO_H

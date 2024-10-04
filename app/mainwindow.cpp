@@ -42,6 +42,8 @@ void MainWindow::drawConnectedWindow()
     logsLayout->addWidget(logsWidget);
     ui->logsTab->setLayout(logsLayout);
 
+    drawMenuBar();
+
     // reading additional data if addInfoWidget tab clicked
     QObject::connect(ui->tabWidget, SIGNAL(currentChanged(int)), addInfoWidget,
         SLOT(slotOnTabChosen(int)));
@@ -71,6 +73,41 @@ void MainWindow::drawConnectedWindow()
     connect(mainInfoWidget->getParser(),
         SIGNAL(sgnData03Updated(const MainInfo&)),
         logsWidget, SLOT(slotWriteMainDataInFile(const MainInfo&)));
+    // setting data from mainInfoParser on graph
+    connect(mainInfoWidget->getParser(),
+        SIGNAL(sgnData03Updated(const MainInfo&)),
+        logsWidget,
+        SLOT(slotUpdate03Data(const MainInfo&)));
+    connect(mainInfoWidget->getParser(),
+        SIGNAL(sgnData04Updated(const MainInfo&)),
+        logsWidget,
+        SLOT(slotUpdate04Data(const MainInfo&)));
+}
+
+void MainWindow::drawMenuBar()
+{
+    menubar_ = new QMenuBar(this);
+    QMenu* viewMenu = new QMenu("&View");
+
+    // show received data
+    QAction* showReceivedDataAction = new QAction("Show received data");
+    showReceivedDataAction->setCheckable(true);
+    showReceivedDataAction->setChecked(true);
+    QObject::connect(showReceivedDataAction, SIGNAL(triggered(bool)),
+        SLOT(slotShowReceivedData(bool)));
+    viewMenu->addAction(showReceivedDataAction);
+
+    // wait for reply before changing text
+    QAction* waitReplyAction = new QAction("Wait for reply before "
+        "changing text");
+    waitReplyAction->setCheckable(true);
+    waitReplyAction->setChecked(true);
+    QObject::connect(waitReplyAction, SIGNAL(triggered()),
+        SLOT(slotWaitReply()));
+    viewMenu->addAction(waitReplyAction);
+
+    menubar_->addMenu(viewMenu);
+    setMenuBar(menubar_);
 }
 
 MainWindow::MainWindow(COMPortReader* reader) : QMainWindow(nullptr),
@@ -84,12 +121,13 @@ MainWindow::MainWindow(COMPortReader* reader) : QMainWindow(nullptr),
     addInfoReadingProgress(nullptr)
 {
     noConnectionPixmap = new QPixmap(
-        QPixmap(":/new/images/no-connection.png").scaled(QSize(300, 300),
+        QPixmap(":/images/no-connection.png").scaled(QSize(300, 300),
         Qt::KeepAspectRatio, Qt::SmoothTransformation));
     setMinimumSize(1150, 650);
     setWindowTitle("BMSInterface");
 
     drawNoConnectionWindow();
+    drawMenuBar();
 
     statusBar()->showMessage("");
     connect(reader, SIGNAL(sgnNoPortsFound(size_t)),
@@ -161,7 +199,7 @@ void MainWindow::slotSetStatusBarMessage(const QByteArray& ba)
     statusBar()->showMessage("Recieved: " + ba.toHex(' '), 2000);
 }
 
-void MainWindow::on_actionShow_received_data_triggered(bool checked)
+void MainWindow::slotShowReceivedData(bool checked)
 {
     if (checked)
     {
@@ -176,4 +214,20 @@ void MainWindow::on_actionShow_received_data_triggered(bool checked)
         QObject::disconnect(reader, SIGNAL(sgnDataGotAutomatic(QByteArray)),
             this, SLOT(slotSetStatusBarMessage(const QByteArray&)));
     }
+}
+
+void MainWindow::slotWaitReply()
+{
+    if (mainInfoWidget) mainInfoWidget->slotChangeInstantlyChangeParameters();
+    if (addInfoWidget) addInfoWidget->slotChangeInstantlyChangeParameters();
+}
+
+void MainWindow::slotLightAction()
+{
+    std::cout << "light\n";
+}
+
+void MainWindow::slotDarkAction()
+{
+    std::cout << "dark\n";
 }
