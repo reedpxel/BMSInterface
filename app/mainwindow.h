@@ -6,7 +6,6 @@
 #include "addinfowidget.h"
 #include "logswidget.h"
 
-
 class MainInfoWidget;
 class AddInfoWidget;
 
@@ -55,6 +54,7 @@ private slots:
     void slotWaitReply();
     void slotLightAction();
     void slotDarkAction();
+    void slotCreateChangeDeviceWindow();
 };
 
 #endif // MAINWINDOW_H

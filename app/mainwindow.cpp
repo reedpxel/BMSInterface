@@ -87,7 +87,20 @@ void MainWindow::drawConnectedWindow()
 void MainWindow::drawMenuBar()
 {
     menubar_ = new QMenuBar(this);
+    QMenu* comPortMenu = new QMenu("&COM port");
     QMenu* viewMenu = new QMenu("&View");
+
+    // disconnect
+    QAction* disconnectAction = new QAction("Disconnect");
+    QObject::connect(disconnectAction, SIGNAL(triggered()),
+        reader, SLOT(slotDisconnect()));
+    comPortMenu->addAction(disconnectAction);
+
+    // change USB-Serial device name
+    QAction* changeDeviceNameAction = new QAction("Change device name");
+    QObject::connect(changeDeviceNameAction, SIGNAL(triggered(bool)),
+        SLOT(slotCreateChangeDeviceWindow()));
+    comPortMenu->addAction(changeDeviceNameAction);
 
     // show received data
     QAction* showReceivedDataAction = new QAction("Show received data");
@@ -106,6 +119,7 @@ void MainWindow::drawMenuBar()
         SLOT(slotWaitReply()));
     viewMenu->addAction(waitReplyAction);
 
+    menubar_->addMenu(comPortMenu);
     menubar_->addMenu(viewMenu);
     setMenuBar(menubar_);
 }
@@ -169,7 +183,7 @@ void MainWindow::slotPortDidNotOpen(const QString& str)
 void MainWindow::slotPortClosed()
 {
     drawNoConnectionWindow();
-    statusBar()->showMessage("No reply from device, COM port closed", 2000);
+    statusBar()->showMessage("COM port closed", 2000);
 }
 
 void MainWindow::slotAddInfoReadBegun()
@@ -230,4 +244,12 @@ void MainWindow::slotLightAction()
 void MainWindow::slotDarkAction()
 {
     std::cout << "dark\n";
+}
+
+void MainWindow::slotCreateChangeDeviceWindow()
+{
+    bool ok;
+    QString newName = QInputDialog::getText(this, tr("Set new device name"),
+        tr("Device name: "), QLineEdit::Normal, reader->getDeviceName(), &ok);
+    if (ok) reader->slotSetDeviceName(newName);
 }

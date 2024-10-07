@@ -22,13 +22,14 @@ class COMPortReader : public QObject
 {
 Q_OBJECT
     QSerialPort* port;
+    QString deviceName;
     bool waitingReply;
     bool modeIsAutomatic;
     bool lastQueryAnswered; // this variable is checked before sending a query
     // if is false,  no reply got from BMS => BMS is absent
-    // maybe it must be atomic
-    QTimer* writeTimer;
-    int timerId;
+    QTimer* writeTimer; // timer that writes 0x03 and 0x04 messages
+    int timerId; // id of a timer that searches for ports until a reading
+                 // device found
     bool isConnected;
     size_t attempt;
     bool writeMsgFlag;
@@ -36,10 +37,12 @@ Q_OBJECT
     QByteArray msgToSend04;
 
     void openPort(const QString&);
+    void closePort();
     virtual void timerEvent(QTimerEvent*);
 public:
     COMPortReader();
     ~COMPortReader();
+    QString getDeviceName();
 signals:
     void sgnNoPortsFound(size_t);
     void sgnPortOpened(const QString&);
@@ -59,6 +62,8 @@ public slots:
     void slotSetManualMode();
     void slotWriteManually(const QByteArray&);
     void slotWriteQueries(const std::vector<QByteArray>&);
+    void slotDisconnect();
+    void slotSetDeviceName(const QString& str);
 };
 
 #endif // COMPORTREADER_H
