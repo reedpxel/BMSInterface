@@ -274,10 +274,12 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
             if (!amountOfThermoresistorsGot) return;
             uint16_t value = (data_[0] << 8) + data_[1];
             QString res;
+            thermoresistorsState.clear();
             for (unsigned i = 0; i < amountOfThermoresistors; ++i)
             {
                 if ((value >> i) & 0b1) res += "On ";
                 else res += "Off ";
+                thermoresistorsState.push_back((value >> i) & 0b1);
             }
             ui->thermStateLabel->setText(res);
             ui->changeThermStateButton->setEnabled(true);
@@ -1243,6 +1245,7 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
     awaitedRegisterIndex(0),
     amountOfThermoresistors(0),
     amountOfThermoresistorsGot(false),
+    thermoresistorsState(),
     dataRead(false),
     instantlyChangeParameters(false),
     ui(new Ui::AddInfoWidget)
@@ -1403,7 +1406,6 @@ void AddInfoWidget::slotOnWritingError()
 {
     std::invoke(setPreviousBuffer[awaitedRegisterIndex], buffer_);
     QMessageBox::warning(this, "Error", "Writing error");
-
 }
 
 void AddInfoWidget::slotOnTabChosen(int currentTab)
@@ -1419,4 +1421,35 @@ void AddInfoWidget::slotChangeInstantlyChangeParameters()
 {
     instantlyChangeParameters = instantlyChangeParameters ? false : true;
     std::cout << instantlyChangeParameters << '\n';
+}
+
+void AddInfoWidget::slotChangeThermoresistorsState(
+    const std::vector<bool>& state)
+{
+    uint16_t data_ = 0;
+    for (int i = 0; i < (state.size() > 16 ? 16 : state.size()); ++i)
+    {
+        if (state[i]) data_ |= 1 << i;
+    }
+    QByteArray array(2, '\0');
+    array[0] = data_ >> 8;
+    array[1] = data_;
+    parser_.setRegisterValue(0x2e, array);
+    guiSetters[31](array);
+}
+
+void AddInfoWidget::on_changeThermStateButton_clicked()
+{
+    if (!amountOfThermoresistorsGot)
+    {
+        QMessageBox::warning(this, "Error",
+            "Amount of thermoresistors is not got");
+        return;
+    }
+    ThermStateWindow* thermStateWindow =
+        new ThermStateWindow(thermoresistorsState, this);
+    connect(thermStateWindow,
+        SIGNAL(sgnSendInfo(const std::vector<bool>&)),
+        SLOT(slotChangeThermoresistorsState(const std::vector<bool>&)));
+    thermStateWindow->show();
 }

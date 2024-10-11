@@ -3,8 +3,10 @@
 #include <vector>
 #include <iostream>
 #include <functional>
+#include <memory>
 #include "addinfoparser.h"
 #include "mainwindow.h"
+#include "thermstatewindow.h"
 
 namespace Ui {
 class AddInfoWidget;
@@ -31,6 +33,8 @@ Q_OBJECT
 
     uint8_t amountOfThermoresistors; // to read 0x2e, got in 0x03, byte 22
     bool amountOfThermoresistorsGot;
+    std::vector<bool> thermoresistorsState; // to enable and disable
+                                            // thermoresistors
 
     bool dataRead; // initially false, gets true as widget is opened
                    // after reading of data
@@ -69,6 +73,9 @@ public slots:
     void slotOnWritingError();
     void slotOnTabChosen(int);
     void slotChangeInstantlyChangeParameters();
+    void slotChangeThermoresistorsState(const std::vector<bool>&);
+private slots:
+    void on_changeThermStateButton_clicked();
 };
 
 #endif // ADDINFOWIDGET_H

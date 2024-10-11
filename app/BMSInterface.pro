@@ -1,45 +1,46 @@
 QT       += core gui widgets serialport testlib printsupport
-
-# greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
 CONFIG += c++17
 
-# You can make your code fail to compile if it uses deprecated APIs.
-# In order to do so, uncomment the following line.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+INCLUDEPATH += $$PWD/lib
+INCLUDEPATH += $$PWD/include
+INCLUDEPATH += $$PWD/src
+INCLUDEPATH += $$PWD/forms
+INCLUDEPATH += $$PWD/resources
 
 SOURCES += \
-    addinfoparser.cpp \
-    addinfowidget.cpp \
-    batteryslider.cpp \
-    comportreader.cpp \
-    jbdparser.cpp \
-    logswidget.cpp \
-    main.cpp \
-    maininfo.cpp \
-    maininfoparser.cpp \
-    maininfowidget.cpp \
-    mainwindow.cpp \
-    qcustomplot.cpp
+    src/addinfoparser.cpp \
+    src/addinfowidget.cpp \
+    src/batteryslider.cpp \
+    src/comportreader.cpp \
+    src/jbdparser.cpp \
+    src/logswidget.cpp \
+    src/main.cpp \
+    src/maininfo.cpp \
+    src/maininfoparser.cpp \
+    src/maininfowidget.cpp \
+    src/mainwindow.cpp \
+    lib/qcustomplot.cpp \
+    src/thermstatewindow.cpp
 
 HEADERS += \
-    addinfoparser.h \
-    addinfowidget.h \
-    batteryslider.h \
-    comportreader.h \
-    jbdparser.h \
-    logswidget.h \
-    maininfo.h \
-    maininfoparser.h \
-    maininfowidget.h \
-    mainwindow.h \
-    qcustomplot.h
+    include/addinfoparser.h \
+    include/addinfowidget.h \
+    include/batteryslider.h \
+    include/comportreader.h \
+    include/jbdparser.h \
+    include/logswidget.h \
+    include/maininfo.h \
+    include/maininfoparser.h \
+    include/maininfowidget.h \
+    include/mainwindow.h \
+    lib/qcustomplot.h \
+    include/thermstatewindow.h
 
 FORMS += \
-    addinfowidget.ui \
-    logswidget.ui \
-    maininfowidget.ui \
-    mainwindow.ui
+    forms/addinfowidget.ui \
+    forms/logswidget.ui \
+    forms/maininfowidget.ui \
+    forms/mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -47,4 +48,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
-    resources.qrc
+    resources/resources.qrc
