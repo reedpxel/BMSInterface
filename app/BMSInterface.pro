@@ -8,6 +8,7 @@ INCLUDEPATH += $$PWD/forms
 INCLUDEPATH += $$PWD/resources
 
 SOURCES += \
+    src/changepasswordwindow.cpp \
     src/addinfoparser.cpp \
     src/addinfowidget.cpp \
     src/batteryslider.cpp \
@@ -23,6 +24,7 @@ SOURCES += \
     src/thermstatewindow.cpp
 
 HEADERS += \
+    include/changepasswordwindow.h \
     include/addinfoparser.h \
     include/addinfowidget.h \
     include/batteryslider.h \

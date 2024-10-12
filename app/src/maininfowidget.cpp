@@ -8,6 +8,19 @@ MainInfoWidget::MainInfoWidget(QWidget* parent) : QWidget(parent),
     ui(new Ui::MainInfoWidget)
 {
     ui->setupUi(this);
+    makeReadOnly(ui->ConfigChB);
+    makeReadOnly(ui->chargeOvercurrentChB);
+    makeReadOnly(ui->chargeOverheatingChB);
+    makeReadOnly(ui->chargeUnderheatingChB);
+    makeReadOnly(ui->dischargeOvercurrentChB);
+    makeReadOnly(ui->dischargeOverheatingChB);
+    makeReadOnly(ui->dischargeUnderheatingChB);
+    makeReadOnly(ui->frontendChB);
+    makeReadOnly(ui->lineOvervoltageChB);
+    makeReadOnly(ui->lineUndervoltageChB);
+    makeReadOnly(ui->packOvervoltageChB);
+    makeReadOnly(ui->packUndervoltageChB);
+    makeReadOnly(ui->shortCurcuitChB);
     batterySlider = new BatterySlider(ui->batterySliderWidget);
     ui->tempsTable->setFocusPolicy(Qt::NoFocus);
     ui->linesVoltageTable->setFocusPolicy(Qt::NoFocus);
@@ -59,6 +72,12 @@ void MainInfoWidget::resizeEvent(QResizeEvent*)
 MainInfoWidget::~MainInfoWidget() { delete ui; }
 
 MainInfoParser* MainInfoWidget::getParser() { return &parser_; }
+
+void MainInfoWidget::makeReadOnly(QCheckBox* checkBox)
+{
+    checkBox->setAttribute(Qt::WA_TransparentForMouseEvents);
+    checkBox->setFocusPolicy(Qt::NoFocus);
+}
 
 void MainInfoWidget::slotDataUpdated(const MainInfo& mainInfo)
 {

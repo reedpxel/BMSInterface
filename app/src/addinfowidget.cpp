@@ -43,7 +43,6 @@ bool AddInfoWidget::binarySearch(it_t begin_, it_t end_, QWidget* value)
     while (right_ - left_ > 1)
     {
         auto middle_ = left_ + (right_ - left_) / 2;
-        std::cout << reinterpret_cast<void*>((*middle_).first) << '\n';
         if (value == (*middle_).first) return true;
         if (value > (*middle_).first) left_ = middle_;
         else right_ = middle_;
@@ -115,6 +114,12 @@ QWidget* AddInfoWidget::findEditableWidgetIndex(int index)
 {
     if (index < 0 || index >= editableRegistersObjects.size()) return nullptr;
     return editableRegistersObjects[index];
+}
+
+void AddInfoWidget::makeReadOnly(QRadioButton* radioButton)
+{
+    radioButton->setAttribute(Qt::WA_TransparentForMouseEvents);
+    radioButton->setFocusPolicy(Qt::NoFocus);
 }
 
 AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
@@ -1309,6 +1314,55 @@ AddInfoWidget::AddInfoWidget(QWidget* parent) : QWidget(parent),
         ui->lineEdit_0xa2 // 48
     };
 
+    makeReadOnly(ui->radioButton_0x39_0760);
+    makeReadOnly(ui->radioButton_0x39_0761);
+    makeReadOnly(ui->radioButton_0x39_0762);
+    makeReadOnly(ui->radioButton_0x39_0763);
+
+    makeReadOnly(ui->radioButton_0x39_0540);
+    makeReadOnly(ui->radioButton_0x39_0541);
+    makeReadOnly(ui->radioButton_0x39_0542);
+    makeReadOnly(ui->radioButton_0x39_0543);
+
+    makeReadOnly(ui->radioButton_0x38_0430);
+    makeReadOnly(ui->radioButton_0x38_0431);
+    makeReadOnly(ui->radioButton_0x38_0432);
+    makeReadOnly(ui->radioButton_0x38_0433);
+
+    makeReadOnly(ui->radioButton_0x38_02100);
+    makeReadOnly(ui->radioButton_0x38_02101);
+    makeReadOnly(ui->radioButton_0x38_02102);
+    makeReadOnly(ui->radioButton_0x38_02103);
+    makeReadOnly(ui->radioButton_0x38_02104);
+    makeReadOnly(ui->radioButton_0x38_02105);
+    makeReadOnly(ui->radioButton_0x38_02106);
+    makeReadOnly(ui->radioButton_0x38_02107);
+
+    makeReadOnly(ui->radioButton_0x38_06540);
+    makeReadOnly(ui->radioButton_0x38_06541);
+    makeReadOnly(ui->radioButton_0x38_06542);
+    makeReadOnly(ui->radioButton_0x38_06543);
+    makeReadOnly(ui->radioButton_0x38_06544);
+    makeReadOnly(ui->radioButton_0x38_06545);
+    makeReadOnly(ui->radioButton_0x38_06546);
+    makeReadOnly(ui->radioButton_0x38_06547);
+
+    makeReadOnly(ui->radioButton_0x38_032100);
+    makeReadOnly(ui->radioButton_0x38_032101);
+    makeReadOnly(ui->radioButton_0x38_032102);
+    makeReadOnly(ui->radioButton_0x38_032103);
+    makeReadOnly(ui->radioButton_0x38_032104);
+    makeReadOnly(ui->radioButton_0x38_032105);
+    makeReadOnly(ui->radioButton_0x38_032106);
+    makeReadOnly(ui->radioButton_0x38_032107);
+    makeReadOnly(ui->radioButton_0x38_032108);
+    makeReadOnly(ui->radioButton_0x38_032109);
+    makeReadOnly(ui->radioButton_0x38_03210a);
+    makeReadOnly(ui->radioButton_0x38_03210b);
+    makeReadOnly(ui->radioButton_0x38_03210c);
+    makeReadOnly(ui->radioButton_0x38_03210d);
+    makeReadOnly(ui->radioButton_0x38_03210e);
+    makeReadOnly(ui->radioButton_0x38_03210f);
     QObject::connect(ui->updateButton, SIGNAL(clicked()), &parser_,
         SLOT(slotPrepareReadAddData()));
     QObject::connect(ui->updateButton, &QPushButton::clicked,
@@ -1392,13 +1446,13 @@ void AddInfoWidget::slotOnFocusChanged(QWidget*, QWidget* now)
 
 void AddInfoWidget::slotOnWritingSuccess(const QByteArray& array)
 {
-    std::cout << "new buffer: ";
-    for (int i = 0; i < array.size(); ++i)
-    {
-        std::cout << std::hex <<
-            (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
-    }
-    std::cout << '\n';
+    // std::cout << "new buffer: ";
+    // for (int i = 0; i < array.size(); ++i)
+    // {
+    //     std::cout << std::hex <<
+    //         (static_cast<uint16_t>(array[i]) & 0xff) << ' ';
+    // }
+    // std::cout << '\n';
     std::invoke(setPreviousBuffer[awaitedRegisterIndex], array);
 }
 
@@ -1420,7 +1474,7 @@ void AddInfoWidget::slotOnTabChosen(int currentTab)
 void AddInfoWidget::slotChangeInstantlyChangeParameters()
 {
     instantlyChangeParameters = instantlyChangeParameters ? false : true;
-    std::cout << instantlyChangeParameters << '\n';
+    // std::cout << instantlyChangeParameters << '\n';
 }
 
 void AddInfoWidget::slotChangeThermoresistorsState(
@@ -1438,6 +1492,12 @@ void AddInfoWidget::slotChangeThermoresistorsState(
     guiSetters[31](array);
 }
 
+void AddInfoWidget::slotChangePassword(const QByteArray& passwords)
+{
+    if (passwords.size() != 13) return;
+    parser_.setNotEEPROMRegisterValue(0x07, passwords);
+}
+
 void AddInfoWidget::on_changeThermStateButton_clicked()
 {
     if (!amountOfThermoresistorsGot)
@@ -1452,4 +1512,38 @@ void AddInfoWidget::on_changeThermStateButton_clicked()
         SIGNAL(sgnSendInfo(const std::vector<bool>&)),
         SLOT(slotChangeThermoresistorsState(const std::vector<bool>&)));
     thermStateWindow->show();
+}
+
+void AddInfoWidget::on_passwordProtectionCheckBox_stateChanged(int arg1)
+{
+    char str[6] = {'J', '1', 'B', '2', 'D', '4'};
+    QByteArray array(str, 6);
+    if (!arg1) array[5] = '3';
+    parser_.setNotEEPROMRegisterValue(0x09, array);
+}
+
+void AddInfoWidget::on_enterPasswordPushButton_clicked()
+{
+    bool ok;
+    QString newPassword = QInputDialog::getText(this, tr("Set new password"),
+        tr("New password:"), QLineEdit::Normal, "", &ok);
+    if (ok)
+    {
+        if (newPassword.size() > 6)
+        {
+            QMessageBox::warning(this, "Error", "Password size must be 6 "
+                "characters long");
+        } else {
+            while (newPassword.size() != 6) newPassword += '\0';
+            parser_.setNotEEPROMRegisterValue(0x06, newPassword.toUtf8());
+        }
+    }
+}
+
+void AddInfoWidget::on_changePasswordPushButton_clicked()
+{
+    changePasswordWindow = new ChangePasswordWindow(this);
+    changePasswordWindow->show();
+    connect(changePasswordWindow, SIGNAL(sgnPasswordsGot(const QByteArray&)),
+        SLOT(slotChangePassword(const QByteArray&)));
 }

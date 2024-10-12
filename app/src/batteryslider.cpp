@@ -14,9 +14,9 @@ void BatterySlider::paintEvent(QPaintEvent*)
         if (percent_ <= 0)
         {
             greenRect = QRectF(
-                0.07 * width(), // 0.0678
+                0.07 * width(),
                 0.913 * height(),
-                0.83 * width(), // 0.864
+                0.83 * width(),
                 0);
         } else if (percent_ >= 100) {
             greenRect = QRectF(

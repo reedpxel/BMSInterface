@@ -7,6 +7,7 @@
 #include "addinfoparser.h"
 #include "mainwindow.h"
 #include "thermstatewindow.h"
+#include "changepasswordwindow.h"
 
 namespace Ui {
 class AddInfoWidget;
@@ -39,6 +40,7 @@ Q_OBJECT
     bool dataRead; // initially false, gets true as widget is opened
                    // after reading of data
     bool instantlyChangeParameters;
+    ChangePasswordWindow* changePasswordWindow;
 
     Ui::AddInfoWidget* ui;
 
@@ -60,6 +62,7 @@ Q_OBJECT
     QString setTextSoftwareVersion(const QByteArray& array);
     int findEditableWidgetIndex(QWidget* widget);
     QWidget* findEditableWidgetIndex(int index);
+    void makeReadOnly(QRadioButton* radioButton);
 
 public:
     explicit AddInfoWidget(QWidget* parent = nullptr);
@@ -74,8 +77,12 @@ public slots:
     void slotOnTabChosen(int);
     void slotChangeInstantlyChangeParameters();
     void slotChangeThermoresistorsState(const std::vector<bool>&);
+    void slotChangePassword(const QByteArray&);
 private slots:
     void on_changeThermStateButton_clicked();
+    void on_passwordProtectionCheckBox_stateChanged(int arg1);
+    void on_enterPasswordPushButton_clicked();
+    void on_changePasswordPushButton_clicked();
 };
 
 #endif // ADDINFOWIDGET_H

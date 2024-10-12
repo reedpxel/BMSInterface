@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "comportreader.h"
 #include <QApplication>
+#include "changepasswordwindow.h"
 
 int main(int argc, char* argv[])
 {

@@ -1600,7 +1600,7 @@
            <item>
             <widget class="QRadioButton" name="radioButton_0x38_07">
              <property name="enabled">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="font">
               <font>
@@ -1631,7 +1631,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02100">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1649,7 +1649,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02101">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1667,7 +1667,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02102">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1685,7 +1685,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02103">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1703,7 +1703,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02104">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1721,7 +1721,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02105">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1739,7 +1739,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02106">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1757,7 +1757,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_02107">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1789,7 +1789,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0430">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1807,7 +1807,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0431">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1825,7 +1825,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0432">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1843,7 +1843,7 @@
                 <item>
                  <widget class="QRadioButton" name="radioButton_0x38_0433">
                   <property name="enabled">
-                   <bool>false</bool>
+                   <bool>true</bool>
                   </property>
                   <property name="font">
                    <font>
@@ -1891,7 +1891,7 @@
               <item row="5" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032105">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1909,7 +1909,7 @@
               <item row="5" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210d">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1927,7 +1927,7 @@
               <item row="3" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210b">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1945,7 +1945,7 @@
               <item row="0" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_032108">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1963,7 +1963,7 @@
               <item row="3" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032103">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1981,7 +1981,7 @@
               <item row="0" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032100">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -1999,7 +1999,7 @@
               <item row="2" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210a">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2017,7 +2017,7 @@
               <item row="1" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032101">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2035,7 +2035,7 @@
               <item row="4" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032104">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2053,7 +2053,7 @@
               <item row="1" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_032109">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2071,7 +2071,7 @@
               <item row="6" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210e">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2089,7 +2089,7 @@
               <item row="2" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032102">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2107,7 +2107,7 @@
               <item row="6" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032106">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2125,7 +2125,7 @@
               <item row="4" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210c">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2143,7 +2143,7 @@
               <item row="7" column="1">
                <widget class="QRadioButton" name="radioButton_0x38_03210f">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2161,7 +2161,7 @@
               <item row="7" column="0">
                <widget class="QRadioButton" name="radioButton_0x38_032107">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2193,7 +2193,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06540">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2211,7 +2211,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06541">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2229,7 +2229,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06542">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2247,7 +2247,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06543">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2265,7 +2265,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06544">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2283,7 +2283,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06545">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2301,7 +2301,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06546">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2319,7 +2319,7 @@
               <item>
                <widget class="QRadioButton" name="radioButton_0x38_06547">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="font">
                  <font>
@@ -2448,7 +2448,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0760">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2466,7 +2466,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0761">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2484,7 +2484,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0762">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2502,7 +2502,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0763">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2534,7 +2534,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0540">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2552,7 +2552,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0541">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2570,7 +2570,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0542">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -2588,7 +2588,7 @@
             <item>
              <widget class="QRadioButton" name="radioButton_0x39_0543">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>
@@ -3139,7 +3139,7 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_33">
           <item>
-           <widget class="QCheckBox" name="checkBox">
+           <widget class="QCheckBox" name="passwordProtectionCheckBox">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -3151,7 +3151,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="enterPasswordPushButton">
             <property name="font">
              <font>
               <pointsize>8</pointsize>
@@ -3163,7 +3163,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_5">
+           <widget class="QPushButton" name="changePasswordPushButton">
             <property name="font">
              <font>
               <pointsize>8</pointsize>

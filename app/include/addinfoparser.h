@@ -48,7 +48,15 @@ public:
     AddInfoParser(COMPortReader* reader);
     size_t getAmountOfQueries();
     COMPortReader* getReader();
+
+    /*
+        - writes {0x00, 0x00} in 0x00
+        - writes data_ in register_
+        - writes {0x28, 0x28} in 0x01
+    */
     void setRegisterValue(uint8_t register_, const QByteArray& data_);
+    // simply writes data_ in register_
+    void setNotEEPROMRegisterValue(uint8_t register_, const QByteArray& data_);
 public slots:
     void slotParseMessage(const QByteArray&);
     void slotSendNextMessageOrExit();

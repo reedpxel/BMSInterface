@@ -22,6 +22,7 @@ public:
     virtual void resizeEvent(QResizeEvent*);
     ~MainInfoWidget();
     MainInfoParser* getParser();
+    void makeReadOnly(QCheckBox* checkBox);
 private:
     Ui::MainInfoWidget* ui;
 public slots:
